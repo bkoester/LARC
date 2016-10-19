@@ -11,27 +11,31 @@
 #         group1 : the control group from the variate column
 #         gropu2 : the case group from the same column
 #         covariates: what to match on.
+#         OUTCOME: the variable to compare between case and control, no NAs.
 #         type: character fields in the covariates, or numerical?
-#OUTPUTS : 1) Graduation rates of matched groups
-#          2) Tabulated graduating majors by division
-#          3) A data frame containing majors of matched individuals.
+#OUTPUTS : Two sets of statistics:
+#         1) IF the outcome is numeric: both case/control sets are the same
+#         2) IF the outcome is non-numeric: a) 0/1 indicator that outcome is filled, 2) outcome itself
 #NOTES: - This only analyzes COMPLETE fields, i.e. NA in any column will cause the record be discarded!
 #       - this requires library(optmatch)
 #Ex: The ex compares graduating majors of white and black students, matching SAT test scorees and HS_GPA.
 #Ex: kk <- larc.matched.outcomes(data,'STDNT_ETHNC_GRP_SHORT_DES',"White","Black",
 #                                    c('MAX_SATI_MATH_SCR','MAX_SATI_VERB_SCR','HS_GPA'),
-#                                     type=c('N','N','N'))   
+#                                     type=c('N','N','N'),OUTCOME='CUM_GPA')   
 #
 #####################################################################################  
-larc.matched.outcomes <- function(data,variate,group1,group2,covariates,type=c('C','C'))
+larc.matched.outcomes <- function(data,variate,group1,group2,covariates,OUTCOME='UM_DGR_1_MAJOR_1_DES',type=c('C','C'))
 {
   library(optmatch) 
   ncov <- length(covariates)
   
-  #only keep what we want, don't chuck incomplete outcomes!
-  data <- data[,names(data) %in% c(variate,covariates,'UM_DGR_1_MAJOR_1_DES','DIVISION')]
-  temp <- data[,!names(data) %in% c('UM_DGR_1_MAJOR_1_DES')]
-  e    <- complete.cases(temp)
+  #Format the OUTCOME variable first
+  type_outcome <- outcome.type(data,OUTCOME)
+  data <- outcome.reformat(data,OUTCOME,type_outcome)
+  
+  #only keep what we want, don't chuck incomplete outcomes
+  data <- data[,names(data) %in% c(variate,covariates,'OUTTEST')]
+  e    <- complete.cases(data) #only do the matching for complete records. 
   data <- data[which(e),]
   
   #pick out and clean up the case-control pairing
@@ -41,13 +45,22 @@ larc.matched.outcomes <- function(data,variate,group1,group2,covariates,type=c('
   data <- data[which(cln),]
   nst  <- length(data[,1])
   
-  #set the outcome variable
-  out    <- mat.or.vec(nst,1)
-  e      <- data$UM_DGR_1_MAJOR_1_DES != ""
-  print(sum(e))
-  out[e] <- 1
-  outdescr <- data$UM_DGR_1_MAJOR_1_DES
-  outdiv   <- data$DIVISION
+  #fill in the standard test columns depending on the OUTCOME type.
+  print(paste('OUTCOME type = ',type_outcome,sep=""))
+  if (type_outcome == 'factor' | type_outcome == 'character')
+  {
+    OUTBIN <- mat.or.vec(nst,1)
+    e      <- data$OUTTEST != "NONE"
+    OUTBIN[e] <- 1
+    
+    OUTCAT <- mat.or.vec(nst,1)
+    OUTCAT <- data$OUTTEST
+  }
+  else 
+  {
+    OUTBIN <- data$OUTTEST
+    OUTCAT <- data$OUTTEST
+  }
   
   #now read the case vector and standardize it.
   assign(variate,as.numeric(data[,names(data) %in% variate]))
@@ -71,7 +84,7 @@ larc.matched.outcomes <- function(data,variate,group1,group2,covariates,type=c('
     pctrlname  <- lvl[2]
   }
   
-  datalm <- data.frame(case,out,outdescr,outdiv)
+  datalm <- data.frame(case,OUTBIN,OUTCAT)
   
   for (i in 1:ncov)
   {
@@ -82,7 +95,7 @@ larc.matched.outcomes <- function(data,variate,group1,group2,covariates,type=c('
     if (type[i] == 'N'){tt <- as.numeric(tt)}
     if (type[i] == 'C'){tt <- as.character(tt)}
     datalm <- data.frame(datalm,tt)
-    names(datalm)[i+4] <- covariates[i]
+    names(datalm)[i+3] <- covariates[i]
   }
   
   #make the formula
@@ -109,12 +122,10 @@ larc.matched.outcomes <- function(data,variate,group1,group2,covariates,type=c('
   #Note that this matching ONLY considers one-to-one matching, as opposed to averaging
   #all N matches to a single individuals.
   
-  gpenf <- mat.or.vec(nid,1)
-  gpenm <- gpenf
-  outdescf <- gpenf
-  outdescm <- gpenf
-  outdivf  <- gpenf
-  outdivm  <- gpenf
+  GROUP1_STATS1 <- mat.or.vec(nid,1)
+  GROUP2_STATS1 <- GROUP1_STATS1
+  GROUP1_STATS2 <- GROUP1_STATS1
+  GROUP2_STATS2 <- GROUP1_STATS1
   
   for (i in 1:nid)
   {
@@ -123,31 +134,54 @@ larc.matched.outcomes <- function(data,variate,group1,group2,covariates,type=c('
     if (i == nid){stop_ind <- ntot}
     ind <- c(start_ind:stop_ind)
     
-    gpenf[i] <- as.numeric(datalm$out[stop_ind])
-    gpenm[i] <- as.numeric(datalm$out[start_ind])
+    GROUP1_STATS1[i] <- as.numeric(datalm$OUTBIN[stop_ind])
+    GROUP2_STATS1[i] <- as.numeric(datalm$OUTBIN[start_ind])
     
-    outdescf[i] <- as.character(datalm$outdescr[stop_ind])
-    outdescm[i] <- as.character(datalm$outdescr[start_ind])
-    
-    outdivf[i] <- as.character(datalm$outdiv[stop_ind])
-    outdivm[i] <- as.character(datalm$outdiv[start_ind])
+    GROUP1_STATS2[i] <- as.character(datalm$OUTCAT[stop_ind])
+    GROUP2_STATS2[i] <- as.character(datalm$OUTCAT[start_ind])
     
   }
   
-  print(paste('N =',nid))
-  pctrl  <- signif(sum(gpenm)/nid,4)
-  sectrl <- signif(sqrt(pctrl*(1-pctrl)/nid),4)
-  pcase  <- signif(sum(gpenf)/nid,4)
-  secase <- signif(sqrt(pcase*(1-pcase)/nid),4)
+  #print(paste('N =',nid))
+  #pctrl  <- signif(sum(gpenm)/nid,4)
+  #sectrl <- signif(sqrt(pctrl*(1-pctrl)/nid),4)
+  #pcase  <- signif(sum(gpenf)/nid,4)
+  #secase <- signif(sqrt(pcase*(1-pcase)/nid),4)
   
-  print(paste(pctrlname,'=',pctrl,'+/-',sectrl))
-  print(paste(pcasename,'=',pcase,'+/-',secase))
+  #print(paste(pctrlname,'=',pctrl,'+/-',sectrl))
+  #print(paste(pcasename,'=',pcase,'+/-',secase))
   
-  print('case table')
-  print(table(outdivf))
-  print('control table')
-  print(table(outdivm))
+  #print('case table')
+  #print(table(outdivf))
+  #print('control table')
+  #print(table(outdivm))
+  N <- nid
   
-  return(data.frame(gpenm,gpenf,outdescf,outdescm,outdivf,outdivm,nid))
+  return(data.frame(N,GROUP1_STATS1,GROUP2_STATS1,GROUP1_STATS2,GROUP2_STATS2))
 }
 
+#This looks for designated outcome variable and gets its type
+outcome.type <- function(data,OUTCOME)
+{
+  type <- class(data[,names(data) %in% OUTCOME])
+  return(type)
+}
+
+#Replace the OUTCOME variable with a cleanly formatted 
+#column that we will use in our statistics.
+outcome.reformat <- function(data,OUTCOME,type)
+{
+  OUTTEST <- data[,names(data) %in% OUTCOME]
+  
+  #clean out NAs if it's a factor, replace with 'NONE', so OUTCOME is a complete case.
+  if (type == 'factor')
+  {
+    e <- is.na(OUTTEST)
+    if (sum(e,na.rm=TRUE) > 0){OUTTEST[e] <- 'NONE'}
+  }
+  
+  #if OUTCOME is numeric or integer, we won't do anything.
+  data <- data.frame(OUTTEST,data)
+  return(data)
+  
+}
