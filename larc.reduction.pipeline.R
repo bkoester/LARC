@@ -14,8 +14,8 @@ larc.reduction.pipeline <- function(lsi,lst,lsc,TAG='20160801',LARCDIR="/Users/b
 {
   
   lsiname <- paste(LARCDIR,"LARC-QA_",TAG,"_STDNT_INFO.csv",sep="")
-  lstname <- paste(LARCDIR,"LARC-QA_",TAG,"_STDNT_TERM.csv",sep="")
-  lscname <- paste(LARCDIR,"LARC-QA_",TAG,"_STDNT_CLASS_INFO.csv",sep="")
+  lstname <- paste(LARCDIR,"LARC-QA_",TAG,"_STDNT_TERM_INFO.csv",sep="")
+  lscname <- paste(LARCDIR,"LARC-QA_",TAG,"_STDNT_TERM_CLASS_INFO.csv",sep="")
   
   outSCname <- paste(OUTDIR,'BPK_LARC_STUDENT_COURSE_',TAG,'.tab',sep="")
   outSRname <- paste(OUTDIR,'BPK_LARC_STUDENT_RECORD_',TAG,'.tab',sep="")
@@ -23,11 +23,11 @@ larc.reduction.pipeline <- function(lsi,lst,lsc,TAG='20160801',LARCDIR="/Users/b
   #read in the tables here. The initial read-in is slow if you use bz2. The lsc tables is > 4GB. May be a problem,
   #i recommend unzipping them outside of R.
   #lsi <- read.csv(lsiname,sep=",")
-  #lst <- read.csv(lst,sep=",")
+  #lst <- read.csv(lstname,sep=",")
   #lsc <- read.csv(lscname,sep=",")
   
   #clean things up in the tables
-  lsc <- reduce.lsc.table(lsc)
+  lsc <- reduce.lsc.table(lsc,lst)
   lsi <- reduce.lsi.table(lsi)
   lsi <- add.graduating.gpa(lst,lsi)
   e   <- lsi$CRER_LVL_CD == 'U'
@@ -185,7 +185,7 @@ reduce.lst.table <- function(lst)
 }
 
 #select student course columns form the studnet course table, keeping ONLY courses taken for a grade.
-reduce.lsc.table <- function(lsc)
+reduce.lsc.table <- function(lsc,lst)
 {
   #tables cuts here
   e    <- lsc$GRD_BASIS_ENRL_DES == 'Graded'
@@ -196,6 +196,12 @@ reduce.lsc.table <- function(lsc)
             "SBJCT_CD","CATLG_NBR","CRSE_ID_CD","CLASS_SCTN_CD","ASSOC_CLASS_CD",
             "CRSE_CMPNT_CD")
   data <- lsc[,cols]
+  
+  #merge in the total credits at the end of each term a class was taken.
+  temp <- lst[,names(lst) %in% c('STDNT_ID','TERM_CD','ACAD_LVL_BOT_SHORT_DES')]
+  data <- merge(data,temp,by=c('STDNT_ID','TERM_CD'))
+  
+  
   return(data)
   
 }  
