@@ -17,7 +17,7 @@
 #         1) IF the outcome is numeric: both case/control sets are the same
 #         2) IF the outcome is non-numeric: a) 0/1 indicator that outcome is filled, 2) outcome itself
 #NOTES: - This only analyzes COMPLETE fields, i.e. NA in any column will cause the record be discarded!
-#       - this requires library(optmatch)
+#       - this requires library(optmatch). To install: > install.packages('optmatch')
 #Ex: The ex compares graduating majors of white and black students, matching SAT test scorees and HS_GPA.
 #Ex: kk <- larc.matched.outcomes(data,'STDNT_ETHNC_GRP_SHORT_DES',"White","Black",
 #                                    c('MAX_SATI_MATH_SCR','MAX_SATI_VERB_SCR','HS_GPA'),
@@ -26,7 +26,9 @@
 #####################################################################################  
 larc.matched.outcomes <- function(data,variate,group1,group2,covariates,OUTCOME='UM_DGR_1_MAJOR_1_DES',type=c('C','C'))
 {
-  library(optmatch) 
+  
+  require(optmatch)
+  
   ncov <- length(covariates)
   
   #Format the OUTCOME variable first
