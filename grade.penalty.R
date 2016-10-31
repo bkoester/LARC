@@ -113,9 +113,9 @@ if (MATCHING == TRUE)
   fmn <- round(mean(gg$gpenf),3)
   fse <- round(sd(gg$gpenf)/sqrt(length(gg$gpenf)),3)
   
-  #text(1,2.75,'MATCHED MEAN GRADE:',pos=4)
-  #text(1,2.5,paste(ltitle1,mmn,'+/-',mse,sep=" "),pos=4)
-  #text(1,2.25,paste(ltitle2,fmn,'+/-',fse,sep=" "),col='red',pos=4)
+  text(1,2.75,'MATCHED MEAN GRADE:',pos=4)
+  text(1,2.5,paste(ltitle1,mmn,'+/-',mse,sep=" "),pos=4)
+  text(1,2.25,paste(ltitle2,fmn,'+/-',fse,sep=" "),col='red',pos=4)
   #text(1,2.0,paste('Cohen d = ',signif(as.numeric(chd$estimate),3),'[',
   #                 signif(as.numeric(chd$conf.int[1]),3),',',
   #                 signif(as.numeric(chd$conf.int[2]),3),']',sep=""),pos=4)
@@ -130,7 +130,7 @@ if (REGRESSION == TRUE)
  res <- summary(uber_reg)
  SEX_REG    <- res$coefficients[3,1]
  SEX_REG_SE <- res$coefficients[3,2]
- #text(1,3.0,paste('SEX_REG_COEFF:',round(SEX_REG,3),'+/-',round(SEX_REG_SE,3)),pos=4)
+ text(1,3.0,paste('GNDR_REG_COEFF:',round(SEX_REG,3),'+/-',round(SEX_REG_SE,3)),pos=4)
  out <- data.frame(out,SEX_REG,SEX_REG_SE)
  
 }
@@ -320,7 +320,6 @@ compute.overall.grade.penalty <- function(data,BOOT=TRUE)
   nstd <- length(data)         #Number of students
   gpen <- data$GRD_PNTS_PER_UNIT_NBR-data$EXCL_CLASS_CUM_GPA
   e <- is.na(gpen)
-  View(data[which(e),])
   
   #Now compute the grade penalty
   if (BOOT == FALSE)
@@ -585,126 +584,6 @@ compute.basic.stats <- function(small,big,varname)
                     MN_BIG,SD_BIG,N_BIG,SE_BIG))
 }
 
-#These are local functions that make pretty plots for the paper.
-make.master.grade.penalty.plots <- function()
-{
-  data <- read.table('/Users/bkoester/Box\ Sync/InComingPlots/grom_paper/all_grade_penalties/all.course.notes.v2.txt',sep="\t",header=TRUE)
-  #Plot 1: S,SS,Hu,E
-  e <- data$CATALOG_NBR != 126
-  data <- data[which(e),]
-  s  <- data$DIV == 'S' | data$DIV == 'E'
-  ss <- data$DIV == 'SS'
-  h  <- data$DIV == 'H'
-  #e  <- data$DIV == 'E'
-  #l  <- (data$SUBJECT == 'CHEM' & (data$CATALOG_NBR == 211 | data$CATALOG_NBR == 126 | data$CATALOG_NBR == 216)) | 
-  #      (data$SUBJECT == 'PHYSICS' & (data$CATALOG_NBR == 136 | data$CATALOG_NBR == 236 | data$CATALOG_NBR == 141 | data$CATALOG_NBR == 241)) |
-  #      (data$SUBJECT == 'BIOLOGY' & (data$CATALOG_NBR == 173))
-  l   <- data$TYPE == 'LAB' & (data$DIV == 'S') 
-  c   <- (data$SUBJECT == 'PHYSICS' & (data$CATALOG_NBR == 140 | data$CATALOG_NBR == 240 | data$CATALOG_NBR == 235 | data$CATALOG_NBR == 125)) |
-         (data$SUBJECT == 'CHEM' & (data$CATALOG_NBR == 130 | data$CATALOG_NBR == 210 | data$CATALOG_NBR == 215 )) |
-         (data$SUBJECT == 'MATH' & (data$CATALOG_NBR == 115 | data$CATALOG_NBR == 116 )) |
-         (data$SUBJECT == 'BIOLOGY' & (data$CATALOG_NBR == 171 | data$CATALOG_NBR == 172))
-  ns  <- length(which(s))
-  nss <- length(which(ss))
-  nh  <- length(which(h))
-  nl  <- length(which(l))
-  nc  <- length(which(c))
-  
-  #or a simple STEM-non lab flag
-  
-  
-  #First the all course grade penalty plot
-  #plot(data$MN_ALL,data$MN_FEMALES-data$MN_MALES,pch=0,main='Grade Penalties by Division',
-  #     xlab='Grade Penalty (Grade - GPAO)',ylab='Female GP - Male GP',cex=0.1)
-  pdf('/Users/bkoester/Box\ Sync/InComingPlots/grom_paper/all.divisions.pdf',width=11,height=7)
-  plot(0,0,main='Grade Anomaly by Division',
-       xlab='Average Grade Anomaly',ylab='Gendered Performance Difference',
-       cex=0.1,ylim=c(-0.4,0.4),xlim=c(-0.65,0.65))
-  lines(c(-0.65,0.65),c(0,0))
-  lines(c(0,0),c(-0.4,0.4))
-  points(data$MN_GA_ALL[s],data$MN_GA_FEMALES[s]-data$MN_GA_MALES[s],pch=19,col='red')
-  overplot.error.bars(data$MN_GA_ALL[s],data$MN_GA_FEMALES[s]-data$MN_GA_MALES[s],
-                      data$SE_GA_ALL[s],data$SE_GA_FEMALES[s],col='red')
-  points(data$MN_GA_ALL[ss],data$MN_GA_FEMALES[ss]-data$MN_GA_MALES[ss],pch=19,col='blue')
-  overplot.error.bars(data$MN_GA_ALL[ss],data$MN_GA_FEMALES[ss]-data$MN_GA_MALES[ss],
-                      data$SE_GA_ALL[ss],data$SE_GA_FEMALES[ss],col='blue')
-  points(data$MN_GA_ALL[h],data$MN_GA_FEMALES[h]-data$MN_GA_MALES[h],pch=5,col='blue',bg='white')
-  overplot.error.bars(data$MN_GA_ALL[h],data$MN_GA_FEMALES[h]-data$MN_GA_MALES[h],
-                      data$SE_GA_ALL[h],data$SE_GA_FEMALES[h],col='blue')
-  
-  #points(data$MN_ALL[e],data$MN_FEMALES[e]-data$MN_MALES[e],pch=8,col='blue')
-  legend(0.3,0.4,c('Science and Engineering','Social Sciences','Humanities'),
-         col=c('red','blue','blue'),pch=c(19,19,5))
-  text(-0.6,-0.4,'Males Favored',font=2,col='red',pos=4)
-  text(-0.6,0.4 ,'Females Favored',font=2,col='red',pos=4)
-  text(0.1,0.3,'Grade Bonus',srt=90,font=2,col='red',pos=3)
-  text(-0.1,0.3,'Grade Penalty',srt=90,font=2,col='red',pos=3)
-  dev.off()
-  
-  
-  #Then just STEM and lab course grade penalties
-  pdf('/Users/bkoester/Box\ Sync/InComingPlots/grom_paper/stem.pdf',width=11,height=7)
-  plot(data$MN_GA_ALL[s],data$MN_GA_FEMALES[s]-data$MN_GA_MALES[s],pch=19,main='Grade Anomalies in STEM',
-       xlab='Average Grade Anomaly',ylab='Gendered Performance Difference',cex=0.5,xlim=c(-0.65,0.65))
-  overplot.error.bars(data$MN_GA_ALL[s],data$MN_GA_FEMALES[s]-data$MN_GA_MALES[s],
-                      data$SE_GA_ALL[s],data$SE_GA_FEMALES[s],col='black')
-  points(data$MN_GA_ALL[l],data$MN_GA_FEMALES[l]-data$MN_GA_MALES[l],pch=19,col='red')
-  overplot.error.bars(data$MN_GA_ALL[l],data$MN_GA_FEMALES[l]-data$MN_GA_MALES[l],
-                      data$SE_GA_ALL[l],data$SE_GA_FEMALES[l],col='red')
-  points(data$MN_GA_ALL[c],data$MN_GA_FEMALES[c]-data$MN_GA_MALES[c],pch=8)
-  #overplot.error.bars(data$MN_GA_ALL[c],data$MN_GA_FEMALES[c]-data$MN_GA_MALES[c],
-  #                    data$SE_GA_ALL[c],data$SE_GA_FEMALES[c],col='black')
-  
-  lines(c(0,0),c(-0.3,0.15))
-  lines(c(-0.6,0.6),c(0,0))
-  
-  text(data$MN_GA_ALL[s],data$MN_GA_FEMALES[s]-data$MN_GA_MALES[s],cex=0.5,
-       labels=paste(data$SUBJECT[s],data$CATALOG_NBR[s],sep=" "),pos=4)
-  text(data$MN_GA_ALL[l],data$MN_GA_FEMALES[l]-data$MN_GA_MALES[l],cex=0.5,
-       labels=paste(data$SUBJECT[l],data$CATALOG_NBR[l],sep=" "),pos=4,col='red')
-  legend(-0.6,0.15,c('LEC','LAB','REQ-LEC'),col=c('black','red','black'),pch=c(19,19,8))
-  dev.off()
-  
-  #Now just STEM courses with the MATCHED differences
-  pdf('/Users/bkoester/Box\ Sync/InComingPlots/grom_paper/matched.pdf',width=11,height=7)
-  plot(data$MN_GA_ALL[s],data$MATCHED_MEAN_FEMALES[s]-data$MATCHED_MEAN_MALES[s],pch=19,cex=0.5,
-       main='Matched Analysis Does Not Correct the Gender Gap',
-       xlab='Average Grade Anomaly',ylab='Matched (Female-Male) Grades',xlim=c(-0.65,0.65))
-  overplot.error.bars(data$MN_GA_ALL[s],data$MATCHED_MEAN_FEMALES[s]-data$MATCHED_MEAN_MALES[s],
-                      data$SE_GA_ALL[s],sqrt(data$MATCHED_SE_FEMALES[s]^2+data$MATCHED_SE_MALES[s]^2))
-  points(data$MN_GA_ALL[l],data$MATCHED_MEAN_FEMALES[l]-data$MATCHED_MEAN_MALES[l],pch=19,col='red')
-  overplot.error.bars(data$MN_GA_ALL[l],data$MATCHED_MEAN_FEMALES[l]-data$MATCHED_MEAN_MALES[l],
-                      data$SE_GA_ALL[l],sqrt(data$MATCHED_SE_FEMALES[l]^2+data$MATCHED_SE_MALES[l]^2),col='red')
-  points(data$MN_GA_ALL[c],data$MATCHED_MEAN_FEMALES[c]-data$MATCHED_MEAN_MALES[c],pch=8)
-  overplot.error.bars(data$MN_GA_ALL[c],data$MATCHED_MEAN_FEMALES[c]-data$MATCHED_MEAN_MALES[c],
-                      data$SE_GA_ALL[c],sqrt(data$MATCHED_SE_FEMALES[c]^2+data$MATCHED_SE_MALES[c]^2))
-  
-  lines(c(0,0),c(-1,1))
-  lines(c(-1,1),c(0,0))
-  text(data$MN_GA_ALL[s],data$MATCHED_MEAN_FEMALES[s]-data$MATCHED_MEAN_MALES[s],cex=0.5,
-       labels=paste(data$SUBJECT[s],data$CATALOG_NBR[s],sep=" "),pos=4)
-  text(data$MN_GA_ALL[l],data$MATCHED_MEAN_FEMALES[l]-data$MATCHED_MEAN_MALES[l],cex=0.5,
-       labels=paste(data$SUBJECT[l],data$CATALOG_NBR[l],sep=" "),pos=4,col='red')
-  dev.off()
-  
-  #Finally, the comparison of the matched GP and the raw GP
-  pdf('/Users/bkoester/Box\ Sync/InComingPlots/grom_paper/matched.vs.raw.pdf',width=11,height=7)
-  plot(data$MN_GA_FEMALES[s]-data$MN_GA_MALES[s],
-       data$MATCHED_MEAN_FEMALES[s]-data$MATCHED_MEAN_MALES[s],pch=19,cex=0.5,
-       xlab='Standard AGA Gap',ylab='Matched AGA Gap',main='Gender Gap is Similar in Matched and Unmatched Data')
-  points(data$MN_GA_FEMALES[l]-data$MN_GA_MALES[l],data$MATCHED_MEAN_FEMALES[l]-data$MATCHED_MEAN_MALES[l],pch=19,col='red')
-  points(data$MN_GA_FEMALES[c]-data$MN_GA_MALES[c],data$MATCHED_MEAN_FEMALES[c]-data$MATCHED_MEAN_MALES[c],pch=8)
-  lines(c(-0.25,0.1),c(-0.25,0.1))
-  text(data$MN_GA_FEMALES[s]-data$MN_GA_MALES[s],
-       data$MATCHED_MEAN_FEMALES[s]-data$MATCHED_MEAN_MALES[s],cex=0.5,
-       labels=paste(data$SUBJECT[s],data$CATALOG_NBR[s],sep=" "),pos=4)
-  text(data$MN_GA_FEMALES[l]-data$MN_GA_MALES[l],
-       data$MATCHED_MEAN_FEMALES[l]-data$MATCHED_MEAN_MALES[l],cex=0.5,
-       labels=paste(data$SUBJECT[l],data$CATALOG_NBR[l],sep=" "),pos=4,col='red')
-  dev.off()
-  
-}
-
 covariate.distributions <- function(small,big)
 {
   
@@ -713,10 +592,8 @@ covariate.distributions <- function(small,big)
   fb <- which(big$STDNT_GNDR_SHORT_DES == 'Female')
   mb <- which(big$STDNT_GNDR_SHORT_DES == 'Male')
   
-  
   #GPAO
   GPAO <- mat.or.vec()
-  
   
 }
 
