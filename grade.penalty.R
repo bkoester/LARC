@@ -480,8 +480,16 @@ run.lasso <- function(sr,sc,crseid)
   x <- x[c(1:10),]
 
   x <- t(x)
-  colnames(x)[4] <- 'ACT_MATH'
-  colnames(x)[5] <- 'ACT_ENGL'
+  colnames(x)[1] <- 'GROSSINC'
+  colnames(x)[2] <- 'GEND'
+  colnames(x)[3] <- 'ETH'
+  colnames(x)[4] <- 'ACTMATH'
+  colnames(x)[5] <- 'ACTENGL'
+  colnames(x)[6] <- 'ACADLVL'
+  colnames(x)[7] <- 'CAREER'
+  colnames(x)[8] <- 'HSGPA'
+  colnames(x)[9] <- 'GPAO'
+  colnames(x)[10] <- 'TERM'
   hh <- lars(x,y,type='lasso')
   
  
