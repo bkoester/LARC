@@ -111,7 +111,7 @@ larc.matched.outcomes <- function(data,variate,group1,group2,covariates,OUTCOME=
   datalm <- cbind(datalm,matches=as.numeric(substr(m1,3,7)))
   
   #And sort once for speed, computing mean grades for the matched groups
-  datalm       <- datalm[order(datalm$matches,datalm$case),] #This sort is crucial. Keeping the SEX makes sure that female is always index 1.
+  datalm       <- datalm[order(datalm$matches,datalm$case),] #This sort is crucial. Keeping the SEX makes sure that case is always index 1.
   datalm$count <- sequence(rle(as.vector(datalm$matches))$lengths)
   
   nid    <- length(datalm$matches[!duplicated(datalm$matches)])
@@ -124,10 +124,10 @@ larc.matched.outcomes <- function(data,variate,group1,group2,covariates,OUTCOME=
   #Note that this matching ONLY considers one-to-one matching, as opposed to averaging
   #all N matches to a single individuals.
   
-  GROUP1_STATS1 <- mat.or.vec(nid,1)
-  GROUP2_STATS1 <- GROUP1_STATS1
-  GROUP1_STATS2 <- GROUP1_STATS1
-  GROUP2_STATS2 <- GROUP1_STATS1
+  CASE_STATS1 <- mat.or.vec(nid,1)
+  CONT_STATS1 <- CASE_STATS1
+  CASE_STATS2 <- CASE_STATS1
+  CONT_STATS2 <- CASE_STATS1
   
   for (i in 1:nid)
   {
@@ -136,11 +136,11 @@ larc.matched.outcomes <- function(data,variate,group1,group2,covariates,OUTCOME=
     if (i == nid){stop_ind <- ntot}
     ind <- c(start_ind:stop_ind)
     
-    GROUP1_STATS1[i] <- as.numeric(datalm$OUTBIN[stop_ind])
-    GROUP2_STATS1[i] <- as.numeric(datalm$OUTBIN[start_ind])
+    CASE_STATS1[i] <- as.numeric(datalm$OUTBIN[stop_ind])
+    CONT_STATS1[i] <- as.numeric(datalm$OUTBIN[start_ind])
     
-    GROUP1_STATS2[i] <- as.character(datalm$OUTCAT[stop_ind])
-    GROUP2_STATS2[i] <- as.character(datalm$OUTCAT[start_ind])
+    CASE_STATS2[i] <- as.character(datalm$OUTCAT[stop_ind])
+    CONT_STATS2[i] <- as.character(datalm$OUTCAT[start_ind])
     
   }
   
@@ -159,7 +159,7 @@ larc.matched.outcomes <- function(data,variate,group1,group2,covariates,OUTCOME=
   #print(table(outdivm))
   N <- nid
   
-  return(data.frame(N,GROUP1_STATS1,GROUP2_STATS1,GROUP1_STATS2,GROUP2_STATS2))
+  return(data.frame(N,CASE_STATS1,CONT_STATS1,CASE_STATS2,CONT_STATS2))
 }
 
 #This looks for designated outcome variable and gets its type
