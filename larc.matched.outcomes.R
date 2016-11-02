@@ -13,6 +13,7 @@
 #         covariates: what to match on.
 #         OUTCOME: the variable to compare between case and control, no NAs.
 #         type: character fields in the covariates, or numerical?
+#         verbose: if TRUE, report matching statistics.
 #OUTPUTS : Two sets of statistics:
 #         1) IF the outcome is numeric: both case/control sets are the same
 #         2) IF the outcome is non-numeric: a) 0/1 indicator that outcome is filled, 2) outcome itself
@@ -24,10 +25,12 @@
 #                                     type=c('N','N','N'),OUTCOME='CUM_GPA')   
 #
 #####################################################################################  
-larc.matched.outcomes <- function(data,variate,group1,group2,covariates,OUTCOME='UM_DGR_1_MAJOR_1_DES',type=c('C','C'))
+larc.matched.outcomes <- function(data,variate,group1,group2,covariates,
+                                  OUTCOME='UM_DGR_1_MAJOR_1_DES',type=c('C','C'),verbose=FALSE)
 {
   
   require(optmatch)
+  require(RItools)
   
   ncov <- length(covariates)
   
@@ -106,6 +109,16 @@ larc.matched.outcomes <- function(data,variate,group1,group2,covariates,OUTCOME=
   
   #...and execute the matching with a caliper set at 0.2 to increase speed...
   m1    <- fullmatch(match_on(model,caliper=0.2),data=datalm)
+
+  #comptue the post match balance statistics if VERBOSE
+  if (verbose == TRUE)
+  {
+    mbalance <- xBalance(as.formula(mod), 
+                         data = datalm, 
+                         #report = c("chisquare.test", "std.diffs"), 
+                         strata = data.frame(original = factor("none"), m1))
+    print(mbalance)
+  }
   
   #Now attach the matching structure to the data
   datalm <- cbind(datalm,matches=as.numeric(substr(m1,3,7)))
