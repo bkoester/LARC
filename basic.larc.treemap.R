@@ -1,19 +1,17 @@
 #####################################################################################
-#match two groups for comparison of outcomes.Data set should
-#be cleaned before entry
 #FUNCTION: basic.larc.treemap
 #PURPOSE : Make one or two-level treemaps colored by a something quantitative
 #INPUTS  : data: A data frame containing the columns you want to consider
 #          L1: lowest level in the hierarchy (e.g. majors within a college)
 #          L2: highest level in hierarchy (e.g. colleges)
-#          C1: the column to use to color scale (e.g ACT MATH)
+#          C1: the column to use to color scale (e.g ACT MATH). Currently can't be categorical.
 #          crange: the min/max of the color scale, in units of C1 (e.g. c(14,36))
 #          freqcut: the minimum classification size to use
 #          title: title to place on the plot
 #OUTPUTS : Two sets of statistics:
 #          plots to current device, which usually does not look great in RStudio, best to route to PDF
 #NOTES: -  this requires library(treemap). To install: > install.packages('treemap')
-#Ex:       Build a PDF treemap of majors clustered by entering school, colored by ACT MATH
+#Ex:       Build a PDF treemap of majors clustered by entering school, colored by ACT MATH.
 #          pdf('~/Desktop/majors.pdf',height=7,width=11)
 #          basic.larc.treemap(data,crange=c(14,36),freqcut=1000,L1="UM_DGR_1_MAJOR_1_DES",
 #                             L2='PRMRY_CRER_CD',C1='MAX_ACT_MATH_SCR',title='Major by Incoming College')
