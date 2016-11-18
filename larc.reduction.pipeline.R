@@ -30,13 +30,13 @@ larc.reduction.pipeline <- function(lsi,lst,lsc,TAG='20160801',LARCDIR="/Users/b
   lsc <- reduce.lsc.table(lsc,lst)
   lsi <- reduce.lsi.table(lsi)
   lsi <- add.graduating.gpa(lst,lsi)
-  e   <- lsi$CRER_LVL_CD == 'U'
+  e   <- lsi$CRER_LVL_CD == 'U' | is.na(lsi$CRER_LVL_CD) #added this NA b/c a lot of empties come out of lst...not sure why.
   lsi <- lsi[e,]
   lst <- reduce.lst.table(lst)
   
   
   # do ONLY outerjoins on everything
-  lsi <- merge(lsi,lst,by='STDNT_ID',all=TRUE)
+  lsi <- merge(lsi,lst,by='STDNT_ID',all.x=TRUE,all.y=TRUE)
   
   #write things to disk
   write.table(lsc,outSCname,row.names=FALSE,quote=FALSE,sep="\t")
