@@ -17,6 +17,7 @@
 #OUTPUTS : Two sets of statistics:
 #         1) IF the outcome is numeric: both case/control sets are the same
 #         2) IF the outcome is non-numeric: a) 0/1 indicator that outcome is filled, 2) outcome itself
+#         3) the indices of each case and control in the original dataset.
 #NOTES: - This only analyzes COMPLETE fields, i.e. NA in any column will cause the record be discarded!
 #       - this requires library(optmatch). To install: > install.packages('optmatch')
 #Ex: The ex compares graduating majors of white and black students, matching SAT test scorees and HS_GPA.
@@ -38,8 +39,12 @@ larc.matched.outcomes <- function(data,variate,group1,group2,covariates,
   type_outcome <- outcome.type(data,OUTCOME)
   data <- outcome.reformat(data,OUTCOME,type_outcome)
   
+  #add in an index variable that will allow us to join all these results with the original dataset
+  IND <- c(1:dim(data)[1])
+  data <- data.frame(data,IND)
+  
   #only keep what we want, don't chuck incomplete outcomes
-  data <- data[,names(data) %in% c(variate,covariates,'OUTTEST')]
+  data <- data[,names(data) %in% c(variate,covariates,'OUTTEST','IND')]
   e    <- complete.cases(data) #only do the matching for complete records. 
   data <- data[which(e),]
   
@@ -67,6 +72,8 @@ larc.matched.outcomes <- function(data,variate,group1,group2,covariates,
     OUTCAT <- data$OUTTEST
   }
   
+  IND <- data$IND
+  
   #now read the case vector and standardize it.
   assign(variate,as.numeric(data[,names(data) %in% variate]))
   temp <- eval(as.symbol(variate))
@@ -89,7 +96,7 @@ larc.matched.outcomes <- function(data,variate,group1,group2,covariates,
     pctrlname  <- lvl[2]
   }
   
-  datalm <- data.frame(case,OUTBIN,OUTCAT)
+  datalm <- data.frame(case,OUTBIN,OUTCAT,IND)
   
   for (i in 1:ncov)
   {
@@ -100,7 +107,7 @@ larc.matched.outcomes <- function(data,variate,group1,group2,covariates,
     if (type[i] == 'N'){tt <- as.numeric(tt)}
     if (type[i] == 'C'){tt <- as.character(tt)}
     datalm <- data.frame(datalm,tt)
-    names(datalm)[i+3] <- covariates[i]
+    names(datalm)[i+4] <- covariates[i]
   }
   
   #make the formula
@@ -141,13 +148,17 @@ larc.matched.outcomes <- function(data,variate,group1,group2,covariates,
   CONT_STATS1 <- CASE_STATS1
   CASE_STATS2 <- CASE_STATS1
   CONT_STATS2 <- CASE_STATS1
-  
+  CONT_IND    <- CASE_STATS1
+  CASE_IND    <- CASE_STATS1 
   for (i in 1:nid)
   {
     start_ind <- nstart[i]
     if (i < nid){stop_ind  <- nstart[i+1]-1}
     if (i == nid){stop_ind <- ntot}
     ind <- c(start_ind:stop_ind)
+    
+    CONT_IND[i]    <- as.numeric(datalm$IND[start_ind])
+    CASE_IND[i]    <- as.numeric(datalm$IND[stop_ind])
     
     CASE_STATS1[i] <- as.numeric(datalm$OUTBIN[stop_ind])
     CONT_STATS1[i] <- as.numeric(datalm$OUTBIN[start_ind])
@@ -172,7 +183,7 @@ larc.matched.outcomes <- function(data,variate,group1,group2,covariates,
   #print(table(outdivm))
   N <- nid
   
-  return(data.frame(N,CASE_STATS1,CONT_STATS1,CASE_STATS2,CONT_STATS2))
+  return(data.frame(N,CASE_IND,CONT_IND,CASE_STATS1,CONT_STATS1,CASE_STATS2,CONT_STATS2))
 }
 
 #This looks for designated outcome variable and gets its type
