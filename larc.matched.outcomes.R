@@ -14,6 +14,7 @@
 #         OUTCOME: the variable to compare between case and control, no NAs.
 #         type: character fields in the covariates, or numerical?
 #         verbose: if TRUE, report matching statistics.
+#         multiple: if TRUE, allows return of multiple control matches per case.
 #OUTPUTS : Two sets of statistics:
 #         1) IF the outcome is numeric: both case/control sets are the same
 #         2) IF the outcome is non-numeric: a) 0/1 indicator that outcome is filled, 2) outcome itself
@@ -27,7 +28,7 @@
 #
 #####################################################################################  
 larc.matched.outcomes <- function(data,variate,group1,group2,covariates,
-                                  OUTCOME='UM_DGR_1_MAJOR_1_DES',type=c('C','C'),verbose=FALSE)
+                                  OUTCOME='UM_DGR_1_MAJOR_1_DES',type=c('C','C'),verbose=FALSE,multiple=FALSE)
 {
   
   require(optmatch)
@@ -122,7 +123,7 @@ larc.matched.outcomes <- function(data,variate,group1,group2,covariates,
   {
     mbalance <- xBalance(as.formula(mod), 
                          data = datalm, 
-                         #report = c("chisquare.test", "std.diffs"), 
+                         report = "chisquare.test",#c("chisquare.test", "std.diffs"), 
                          strata = data.frame(original = factor("none"), m1))
     print(mbalance)
   }
@@ -138,52 +139,67 @@ larc.matched.outcomes <- function(data,variate,group1,group2,covariates,
   nstart <- which(datalm$count == 1)
   ntot   <- length(datalm$matches)
   
-  #rnames <- row.names(data) #mat.or.vec(nid,1)
+  outsize <- nid
+  if (multiple == TRUE){outsize <- ntot}
   
-  #Now compute the grades for males and matched females
-  #Note that this matching ONLY considers one-to-one matching, as opposed to averaging
-  #all N matches to a single individuals.
-  
-  CASE_STATS1 <- mat.or.vec(nid,1)
+  CASE_STATS1 <- mat.or.vec(outsize,1)
   CONT_STATS1 <- CASE_STATS1
   CASE_STATS2 <- CASE_STATS1
   CONT_STATS2 <- CASE_STATS1
   CONT_IND    <- CASE_STATS1
   CASE_IND    <- CASE_STATS1 
+  NCONT       <- CASE_STATS1
+  
   for (i in 1:nid)
   {
     start_ind <- nstart[i]
     if (i < nid){stop_ind  <- nstart[i+1]-1}
     if (i == nid){stop_ind <- ntot}
     ind <- c(start_ind:stop_ind)
+  
+    #for the default single control 
+    case_range <- stop_ind
+    ref_ind    <- i
+    cont_range  <- start_ind
+    ccount      <- 1
     
-    CONT_IND[i]    <- as.numeric(datalm$IND[start_ind])
-    CASE_IND[i]    <- as.numeric(datalm$IND[stop_ind])
+    #for multiple controls
+    if (multiple == TRUE)
+    {
+      ref_ind     <- ind
+      ccount      <- length(ind)-1
+      cont_lrange <- start_ind
+      cont_hrange <- stop_ind-1
+      cont_range  <- c(cont_lrange:cont_hrange)
+      #if (ccount == 1) #if we allow multiple matches, need to account differently for single matches.
+      #{
+      #  cont_range <- start_ind
+      #  ref_ind    <- i
+      #}
+    }
+    #print(paste('i = ',i,sep=""))
+    #print(cont_range)
+    NCONT[ref_ind]       <- ccount
+      
+    CONT_IND[ref_ind]    <- as.numeric(datalm$IND[cont_range])
+    CASE_IND[ref_ind]    <- as.numeric(datalm$IND[case_range])
     
-    CASE_STATS1[i] <- as.numeric(datalm$OUTBIN[stop_ind])
-    CONT_STATS1[i] <- as.numeric(datalm$OUTBIN[start_ind])
+    CASE_STATS1[ref_ind] <- as.numeric(datalm$OUTBIN[case_range])
+    CONT_STATS1[ref_ind] <- as.numeric(datalm$OUTBIN[cont_range])
     
-    CASE_STATS2[i] <- as.character(datalm$OUTCAT[stop_ind])
-    CONT_STATS2[i] <- as.character(datalm$OUTCAT[start_ind])
+    CASE_STATS2[ref_ind] <- as.character(datalm$OUTCAT[case_range])
+    CONT_STATS2[ref_ind] <- as.character(datalm$OUTCAT[cont_range])
     
   }
   
-  #print(paste('N =',nid))
-  #pctrl  <- signif(sum(gpenm)/nid,4)
-  #sectrl <- signif(sqrt(pctrl*(1-pctrl)/nid),4)
-  #pcase  <- signif(sum(gpenf)/nid,4)
-  #secase <- signif(sqrt(pcase*(1-pcase)/nid),4)
-  
-  #print(paste(pctrlname,'=',pctrl,'+/-',sectrl))
-  #print(paste(pcasename,'=',pcase,'+/-',secase))
-  
-  #print('case table')
-  #print(table(outdivf))
-  #print('control table')
-  #print(table(outdivm))
   N <- nid
+  out <- data.frame(N,NCONT,CASE_IND,CONT_IND,CASE_STATS1,CONT_STATS1,CASE_STATS2,CONT_STATS2)
   
-  return(data.frame(N,CASE_IND,CONT_IND,CASE_STATS1,CONT_STATS1,CASE_STATS2,CONT_STATS2))
+  #finally, enforce that the same control can't be used twice. this is a minor bug that
+  #i haven't been able to chase down.
+  out <- out[!duplicated(out$CONT_IND),]
+  
+  return(out)
 }
 
 #This looks for designated outcome variable and gets its type

@@ -22,9 +22,9 @@ larc.reduction.pipeline <- function(lsi,lst,lsc,TAG='20160801',LARCDIR="/Users/b
   
   #read in the tables here. The initial read-in is slow if you use bz2. The lsc tables is > 4GB. May be a problem,
   #i recommend unzipping them outside of R.
-  lsi <- read.csv(lsiname,sep=",")
-  lst <- read.csv(lstname,sep=",")
-  lsc <- read.csv(lscname,sep=",")
+  #lsi <- read.csv(lsiname,sep=",")
+  #lst <- read.csv(lstname,sep=",")
+  #lsc <- read.csv(lscname,sep=",")
   
   #clean things up in the tables
   lsc <- reduce.lsc.table(lsc,lst)
@@ -58,7 +58,8 @@ reduce.lsi.table <- function(lsi)
             "LAST_TERM_ATTND_CD","FIRST_TERM_ATTND_CD","FIRST_TERM_ATTND_SHORT_DES","LAST_TERM_ATTND_SHORT_DES",
             "UM_UG_DGR_MAJOR_CNT",
             "UM_DGR_1_CMPLTN_TERM_CD","UM_DGR_2_CMPLTN_TERM_CD",
-            "UM_DGR_1_MAJOR_1_DES","UM_DGR_1_MAJOR_2_DES","UM_DGR_2_MAJOR_1_DES","UM_DGR_2_MAJOR_2_DES")
+            "UM_DGR_1_MAJOR_1_DES","UM_DGR_1_MAJOR_2_DES","UM_DGR_2_MAJOR_1_DES","UM_DGR_2_MAJOR_2_DES",
+            "UM_DGR_1_ACAD_CRER_CD","UM_DGR_2_ACAD_CRER_CD")
   
   #all the AP scores, regardless of date, etc.
   #hh <- grep('MAX_AP.+SCR',names(lsi),perl=TRUE)
@@ -83,6 +84,26 @@ reduce.lsi.table <- function(lsi)
   
   keep <- c(cols,ap,umplc)
   out  <- lsi[,keep]
+  
+  #add a STEM flag to the degrees
+  nst  <- dim(lsi)[1]
+  stem <- read.delim("/Users/bkoester/Google Drive/code/REBUILD/LARC.GITHUB/stem_dec2016.txt",header=FALSE,sep="\t")
+  STEM_DGR_1_MAJOR_1_FLAG <- mat.or.vec(nst,1)
+  STEM_DGR_1_MAJOR_2_FLAG <- STEM_DGR_1_MAJOR_1_FLAG 
+  STEM_DGR_2_MAJOR_1_FLAG <- STEM_DGR_1_MAJOR_1_FLAG 
+  STEM_DGR_2_MAJOR_2_FLAG <- STEM_DGR_1_MAJOR_1_FLAG 
+  
+  nstem   <- dim(stem)[1]
+  STEMCIP <- mat.or.vec(nstem,1) 
+  for (i in 1:nstem){STEMCIP[i] <- strsplit(as.character(stem$V1[i])," ")[[1]][2]}
+  
+  STEM_DGR_1_MAJOR_1_FLAG[lsi$UM_DGR_1_MAJOR_1_CIP_CD %in% STEMCIP] <- 1
+  STEM_DGR_1_MAJOR_2_FLAG[lsi$UM_DGR_1_MAJOR_2_CIP_CD %in% STEMCIP] <- 1
+  STEM_DGR_2_MAJOR_1_FLAG[lsi$UM_DGR_2_MAJOR_1_CIP_CD %in% STEMCIP] <- 1
+  STEM_DGR_2_MAJOR_2_FLAG[lsi$UM_DGR_2_MAJOR_2_CIP_CD %in% STEMCIP] <- 1
+  
+  out <- data.frame(out,STEM_DGR_1_MAJOR_1_FLAG,STEM_DGR_2_MAJOR_1_FLAG,STEM_DGR_1_MAJOR_2_FLAG,STEM_DGR_2_MAJOR_2_FLAG)
+  
   return(out)
   
 }
@@ -104,13 +125,27 @@ reduce.lst.table <- function(lst)
   
   DECL       <- mat.or.vec(nid,5)
   DECL[]     <- NA
+  CIPCD      <- DECL
   DECL_TERM  <- DECL
+  stem <- read.delim("/Users/bkoester/Google Drive/code/REBUILD/LARC.GITHUB/stem_dec2016.txt",header=FALSE,sep="\t")
+  STEM_DECL_FLAG_1 <- mat.or.vec(nid,1)
+  STEM_DECL_FLAG_2 <- STEM_DECL_FLAG_1
+  STEM_DECL_FLAG_3 <- STEM_DECL_FLAG_1
+  STEM_DECL_FLAG_4 <- STEM_DECL_FLAG_1
+  STEM_DECL_FLAG_5 <- STEM_DECL_FLAG_1
+  nstem   <- dim(stem)[1]
+  STEMCIP <- mat.or.vec(nstem,1) 
+  for (i in 1:nstem){STEMCIP[i] <- strsplit(as.character(stem$V1[i])," ")[[1]][2]}
+  
+  
   STDNT_ID   <- mat.or.vec(nid,1)
   #TERM_START <- STDNT_ID
   #TERM_START_SHORT_DES <- STDNT_ID
   
   PGM_CHECK <- c("PGM_1_MAJOR_1_DES","PGM_1_MAJOR_2_DES","PGM_2_MAJOR_1_DES","PGM_2_MAJOR_2_DES")
+  CIP_CHECK <- c("PGM_1_MAJOR_1_CIP_CD","PGM_1_MAJOR_2_CIP_CD","PGM_2_MAJOR_1_CIP_CD","PGM_2_MAJOR_2_CIP_CD")
   pgm_inds  <- which(names(lst) %in% PGM_CHECK)
+  cip_inds  <- which(names(lst) %in% CIP_CHECK)
   
   for (i in 1:nid)
   {
@@ -124,6 +159,7 @@ reduce.lst.table <- function(lst)
     nterms <- length(terms)
     
     mvec   <- mat.or.vec(nterms*4,2)
+    cvec   <- mvec
     tvec   <- mvec
     
     for (j in 1:nterms)
@@ -133,29 +169,45 @@ reduce.lst.table <- function(lst)
         m3 <- as.character(temp[j,pgm_inds[3]])
         m4 <- as.character(temp[j,pgm_inds[4]])
         
+        c1 <- as.character(temp[j,cip_inds[1]])  
+        c2 <- as.character(temp[j,cip_inds[2]])
+        c3 <- as.character(temp[j,cip_inds[3]])
+        c4 <- as.character(temp[j,cip_inds[4]])
+        
         mvec[((j-1)*4+1):((j)*4),1] <- c(terms[j],terms[j],terms[j],terms[j])
         mvec[((j-1)*4+1):((j)*4),2] <- as.vector(c(m1,m2,m3,m4))
+        cvec[((j-1)*4+1):((j)*4),2] <- as.vector(c(c1,c2,c3,c4))
     }
     
     e <- mvec[,2] != ""
     mvec <- mvec[e,]
-    if (length(mvec) > 2){mvec <- mvec[!duplicated(mvec[,2]),]}
+    cvec <- cvec[e,]
+    if (length(mvec) > 2)
+    {
+      tm   <- !duplicated(mvec[,2])
+      mvec <- mvec[tm,]
+      cvec <- cvec[tm,]
+    }
     
     if (is.null(dim(mvec)))
     {
       DECL[i,1] <- mvec[2]
       DECL_TERM[i,1] <- mvec[1]
+      CIPCD[i,1] <- cvec[1]
     }
     
     if (!is.null(dim(mvec))) 
     {
-      mvec <- mvec[!duplicated(mvec[,2]),]
+      tm    <- !duplicated(mvec[,2])
+      mvec <- mvec[tm,]
+      cvec <- cvec[tm,]
       ndecl <- dim(mvec)[1]
         if (ndecl > 5){ndecl <- 5}
         if (dim(mvec)[1] > 0)
         {
           DECL[i,(1:ndecl)]      <- mvec[(1:ndecl),2]
           DECL_TERM[i,(1:ndecl)] <- mvec[(1:ndecl),1]
+          CIPCD[i,(1:ndecl)]     <- cvec[(1:ndecl),1]
         }
     }
     
@@ -177,10 +229,17 @@ reduce.lst.table <- function(lst)
   DECLARE5 <- DECL[,5]
   DECLARE5_TERM <- DECL_TERM[,5]
   
+  STEM_DECL_FLAG_1[CIPCD[,1] %in% STEMCIP] <- 1
+  STEM_DECL_FLAG_2[CIPCD[,2] %in% STEMCIP] <- 1
+  STEM_DECL_FLAG_3[CIPCD[,3] %in% STEMCIP] <- 1
+  STEM_DECL_FLAG_4[CIPCD[,4] %in% STEMCIP] <- 1
+  STEM_DECL_FLAG_5[CIPCD[,5] %in% STEMCIP] <- 1
+  
   out <- data.frame(STDNT_ID,
                     DECLARE1,DECLARE1_TERM,DECLARE2,DECLARE2_TERM,
                     DECLARE3,DECLARE3_TERM,DECLARE4,DECLARE4_TERM, 
-                    DECLARE5,DECLARE5_TERM)
+                    DECLARE5,DECLARE5_TERM,
+                    STEM_DECL_FLAG_1,STEM_DECL_FLAG_2,STEM_DECL_FLAG_3,STEM_DECL_FLAG_4,STEM_DECL_FLAG_5)
   return(out)
 }
 
@@ -198,7 +257,7 @@ reduce.lsc.table <- function(lsc,lst)
   data <- lsc[,cols]
   
   #merge in the total credits at the end of each term a class was taken.
-  temp <- lst[,names(lst) %in% c('STDNT_ID','TERM_CD','ACAD_LVL_BOT_SHORT_DES')]
+  temp <- lst[,names(lst) %in% c('STDNT_ID','TERM_CD','ACAD_LVL_BOT_SHORT_DES','PRMRY_CRER_CD')]
   data <- merge(data,temp,by=c('STDNT_ID','TERM_CD'))
   
   
