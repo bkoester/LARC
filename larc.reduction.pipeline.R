@@ -38,6 +38,11 @@ larc.reduction.pipeline <- function(lsi,lst,lsc,TAG='20160801',LARCDIR="/Users/b
   # do ONLY outerjoins on everything
   lsi <- merge(lsi,lst,by='STDNT_ID',all.x=TRUE,all.y=TRUE)
   
+  #Finall, add on the STEM_TRACK field form the SC table.
+  st <- lsc[,names(lsc) %in% c('STDNT_ID','STEM_START')]
+  st <- st[!duplicated(st$STDNT_ID),]
+  lsi <- merge(lsi,st,by='STDNT_ID',all.x=TRUE)
+  
   #write things to disk
   write.table(lsc,outSCname,row.names=FALSE,quote=FALSE,sep="\t")
   write.table(lsi,outSRname,row.names=FALSE,quote=FALSE,sep="\t")
@@ -96,11 +101,30 @@ reduce.lsi.table <- function(lsi)
   nstem   <- dim(stem)[1]
   STEMCIP <- mat.or.vec(nstem,1) 
   for (i in 1:nstem){STEMCIP[i] <- strsplit(as.character(stem$V1[i])," ")[[1]][2]}
+  #now explicity remove Psych BS/BA
+  ee <- STEMCIP != 42.2704
+  STEMCIP <- STEMCIP[ee]
+  
   
   STEM_DGR_1_MAJOR_1_FLAG[lsi$UM_DGR_1_MAJOR_1_CIP_CD %in% STEMCIP] <- 1
   STEM_DGR_1_MAJOR_2_FLAG[lsi$UM_DGR_1_MAJOR_2_CIP_CD %in% STEMCIP] <- 1
   STEM_DGR_2_MAJOR_1_FLAG[lsi$UM_DGR_2_MAJOR_1_CIP_CD %in% STEMCIP] <- 1
   STEM_DGR_2_MAJOR_2_FLAG[lsi$UM_DGR_2_MAJOR_2_CIP_CD %in% STEMCIP] <- 1
+  
+  #Catch all the general CIP codes. This is only for the ICE list
+  e1 <- flag.general.stem(lsi$UM_DGR_1_MAJOR_1_CIP_CD)
+  e2 <- flag.general.stem(lsi$UM_DGR_1_MAJOR_2_CIP_CD)
+  e3 <- flag.general.stem(lsi$UM_DGR_2_MAJOR_1_CIP_CD)
+  e4 <- flag.general.stem(lsi$UM_DGR_2_MAJOR_2_CIP_CD)
+  STEM_DGR_1_MAJOR_1_FLAG[e1] <- 1
+  STEM_DGR_1_MAJOR_2_FLAG[e2] <- 1
+  STEM_DGR_2_MAJOR_1_FLAG[e3] <- 1
+  STEM_DGR_2_MAJOR_2_FLAG[e4] <- 1
+  
+  STEM_DGR_1_MAJOR_1_FLAG[is.na(lsi$UM_DGR_1_MAJOR_1_CIP_CD)] <- NA
+  STEM_DGR_1_MAJOR_2_FLAG[is.na(lsi$UM_DGR_1_MAJOR_2_CIP_CD)] <- NA
+  STEM_DGR_2_MAJOR_1_FLAG[is.na(lsi$UM_DGR_2_MAJOR_1_CIP_CD)] <- NA
+  STEM_DGR_2_MAJOR_2_FLAG[is.na(lsi$UM_DGR_2_MAJOR_2_CIP_CD)] <- NA
   
   out <- data.frame(out,STEM_DGR_1_MAJOR_1_FLAG,STEM_DGR_2_MAJOR_1_FLAG,STEM_DGR_1_MAJOR_2_FLAG,STEM_DGR_2_MAJOR_2_FLAG)
   
@@ -127,6 +151,8 @@ reduce.lst.table <- function(lst)
   DECL[]     <- NA
   CIPCD      <- DECL
   DECL_TERM  <- DECL
+  
+  print('intending to use NSF STEM CIP codes!')
   stem <- read.delim("/Users/bkoester/Google Drive/code/REBUILD/LARC.GITHUB/stem_dec2016.txt",header=FALSE,sep="\t")
   STEM_DECL_FLAG_1 <- mat.or.vec(nid,1)
   STEM_DECL_FLAG_2 <- STEM_DECL_FLAG_1
@@ -136,7 +162,9 @@ reduce.lst.table <- function(lst)
   nstem   <- dim(stem)[1]
   STEMCIP <- mat.or.vec(nstem,1) 
   for (i in 1:nstem){STEMCIP[i] <- strsplit(as.character(stem$V1[i])," ")[[1]][2]}
-  
+  #now explicity remove Psych BS/BA
+  ee <- STEMCIP != 42.2704
+  STEMCIP <- STEMCIP[ee]
   
   STDNT_ID   <- mat.or.vec(nid,1)
   #TERM_START <- STDNT_ID
@@ -149,7 +177,7 @@ reduce.lst.table <- function(lst)
   
   for (i in 1:nid)
   {
-    if (i %% 10000 == 0){print(paste('Counting declarations',i,'of',nid,'STDNT_IDs',sep=" "))}
+    
     start_ind <- nstart[i]
     if (i < nid){stop_ind  <- nstart[i+1]-1}
     if (i == nid){stop_ind <- ntot}
@@ -157,6 +185,11 @@ reduce.lst.table <- function(lst)
     temp   <- lst[ind,]
     terms  <- temp$TERM_CD
     nterms <- length(terms)
+    
+    if (i %% 10000 == 0)
+    {
+      print(paste('Counting declarations',i,'of',nid,'STDNT_IDs',sep=" "))
+    }
     
     mvec   <- mat.or.vec(nterms*4,2)
     cvec   <- mvec
@@ -193,7 +226,7 @@ reduce.lst.table <- function(lst)
     {
       DECL[i,1] <- mvec[2]
       DECL_TERM[i,1] <- mvec[1]
-      CIPCD[i,1] <- cvec[1]
+      CIPCD[i,1] <- cvec[2]
     }
     
     if (!is.null(dim(mvec))) 
@@ -207,7 +240,7 @@ reduce.lst.table <- function(lst)
         {
           DECL[i,(1:ndecl)]      <- mvec[(1:ndecl),2]
           DECL_TERM[i,(1:ndecl)] <- mvec[(1:ndecl),1]
-          CIPCD[i,(1:ndecl)]     <- cvec[(1:ndecl),1]
+          CIPCD[i,(1:ndecl)]     <- cvec[(1:ndecl),2]
         }
     }
     
@@ -235,17 +268,45 @@ reduce.lst.table <- function(lst)
   STEM_DECL_FLAG_4[CIPCD[,4] %in% STEMCIP] <- 1
   STEM_DECL_FLAG_5[CIPCD[,5] %in% STEMCIP] <- 1
   
+  #Now, catch the all-inclusive CIP codes that we've missed and label NA in the declare fields as NA in the FLAGs
+  e1 <- flag.general.stem(CIPCD[,1])
+  e2 <- flag.general.stem(CIPCD[,2])
+  e3 <- flag.general.stem(CIPCD[,3])
+  e4 <- flag.general.stem(CIPCD[,4])
+  e5 <- flag.general.stem(CIPCD[,5])
+  STEM_DECL_FLAG_1[e1] <- 1
+  STEM_DECL_FLAG_2[e2] <- 1
+  STEM_DECL_FLAG_3[e3] <- 1
+  STEM_DECL_FLAG_4[e4] <- 1
+  STEM_DECL_FLAG_5[e5] <- 1
+  
+  STEM_DECL_FLAG_1[which(is.na(DECLARE1))] <- NA
+  STEM_DECL_FLAG_2[which(is.na(DECLARE2))] <- NA
+  STEM_DECL_FLAG_3[which(is.na(DECLARE3))] <- NA
+  STEM_DECL_FLAG_4[which(is.na(DECLARE4))] <- NA
+  STEM_DECL_FLAG_5[which(is.na(DECLARE5))] <- NA
+  
   out <- data.frame(STDNT_ID,
                     DECLARE1,DECLARE1_TERM,DECLARE2,DECLARE2_TERM,
                     DECLARE3,DECLARE3_TERM,DECLARE4,DECLARE4_TERM, 
                     DECLARE5,DECLARE5_TERM,
                     STEM_DECL_FLAG_1,STEM_DECL_FLAG_2,STEM_DECL_FLAG_3,STEM_DECL_FLAG_4,STEM_DECL_FLAG_5)
+  View(out)
   return(out)
+}
+
+
+flag.general.stem <- function(vec)
+{
+  e <- (vec >= 14 & vec < 15) |  (vec >= 26 & vec < 28) | (vec >= 40 & vec < 41)
+  print(length(which(e)))
+  return(which(e))
 }
 
 #select student course columns form the studnet course table, keeping ONLY courses taken for a grade.
 reduce.lsc.table <- function(lsc,lst)
 {
+  print('filling out SC table')
   #tables cuts here
   e    <- lsc$GRD_BASIS_ENRL_DES == 'Graded'
   lsc  <- lsc[which(e),]
@@ -256,12 +317,72 @@ reduce.lsc.table <- function(lsc,lst)
             "CRSE_CMPNT_CD")
   data <- lsc[,cols]
   
+  #flag the stem courses
+  clist <- c('AERO','AEROSP','ANAT','ANATOMY','ANESTH','AOSS','APPPHYS','ASTRO','AUTO',
+             'BIOINF','BIOLCHEM','BIOLOGY','BIOMATLS','BIOMEDE','BIOPHYS','BIOSTAT',
+             'BOTANY','CANCBIO','CEE','CHE','CHEM','CHEMBIO','CLIMATE','CMPLXSYS','CMPTRSC', #COGSCI
+             'CS','EARTH','EEB','EECS','ENGR','ENSCEN','ENVIRON','ENVRNSTD','EPID','ESENG',
+             'GEOSCI','HUMGEN','IOE',
+             'MACROMOL','MATH','MATSCIE','MCDB','MECHENG','MEDCHEM','MEMS','MFG','MICROBIOL',
+             'NAVARCH','MILSCI','NAVSCI','NERS','NEUROL','NEUROSCI',
+             'PHARMACY','PHARMADM','PHARMCEU','PHARMCHM','PHARMCOG','PHARMSCI','PHYSICS','PHYSIOL',
+             'PIBS','PUBHLTH', #PYSCH
+             'RADIOL','SI','STATS','SPACE','ZOOLOGY')
+  
+  ncrse        <- dim(data)[1]
+  STEM_COURSE  <- mat.or.vec(ncrse,1)
+  e            <- data$SBJCT_CD %in% clist
+  STEM_COURSE[e]   <- 1
+  data          <- data.frame(data,STEM_COURSE)
+  
+  
   #merge in the total credits at the end of each term a class was taken.
   temp <- lst[,names(lst) %in% c('STDNT_ID','TERM_CD','ACAD_LVL_BOT_SHORT_DES','PRMRY_CRER_CD')]
   data <- merge(data,temp,by=c('STDNT_ID','TERM_CD'))
   
   
-  return(data)
+  #add an end-of-term GPA
+  data        <- data[order(data$STDNT_ID,data$TERM_CD), ]
+  data$count  <- sequence(rle(as.vector(data$STDNT_ID))$lengths)
+  ntot       <- length(data$STDNT_ID)
+  nid        <- length(data$STDNT_ID[!duplicated(data$STDNT_ID)])
+  nstart     <- which(data$count == 1)
+  
+  EOT_GPA    <- mat.or.vec(ntot,1)
+  STEM_START <- EOT_GPA
+  
+  for (i in 1:nid)
+  {
+    #print(i)
+    start_ind <- nstart[i]
+    if (i < nid){stop_ind  <- nstart[i+1]-1}
+    if (i == nid){stop_ind <- ntot}
+    ind    <- c(start_ind:stop_ind)
+    
+    sub    <- data[ind,]
+    terms  <- sub$TERM_CD[!duplicated(sub$TERM_CD)]
+    nterms <- length(terms)
+    
+    flag   <- 0
+    
+    for (j in 1:nterms)
+    {
+      h <- which(sub$TERM_CD <= terms[j])
+      m <- which(sub$TERM_CD == terms[j])
+      if (flag == 0 & (grepl('FA',sub$TERM_SHORT_DES) | grepl('WN',sub$TERM_SHORT_DES)))
+      {
+        STEM_START[ind] <- sum(sub$STEM_COURSE[m])
+        flag <- 1
+      }
+      EOT_GPA[ind[m]] <- sum(sub$GRD_PNTS_PER_UNIT_NBR[h]*sub$UNITS_ERND_NBR[h])/sum(sub$UNITS_ERND_NBR[h])
+    }
+    
+    #View(data.frame(sub,EOT_GPA[ind],STEM_START[ind]))
+    #scan()
+    
+  }
+  
+  return(data.frame(data,EOT_GPA,STEM_START))
   
 }  
 
