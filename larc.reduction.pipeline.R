@@ -10,7 +10,7 @@
 #          OUTDIR  - The local directory where the output tables will be written.
 #EXAMPLE: > larc.reduction.pipeline(lsi,lst,lsc)
 #####################################################################################
-larc.reduction.pipeline <- function(lsi,lst,lsc,TAG='20160801',LARCDIR="/Users/bkoester/Box Sync/LARC.FLAT/",OUTDIR="/Users/bkoester/Box Sync/LARC.WORKING/")
+larc.reduction.pipeline <- function(lsi,lst,lsc,TAG='20170125',LARCDIR="/Users/bkoester/Box Sync/LARC.FLAT/",OUTDIR="/Users/bkoester/Box Sync/LARC.WORKING/")
 {
   
   lsiname <- paste(LARCDIR,"LARC_",TAG,"_STDNT_INFO.csv",sep="")
@@ -22,9 +22,9 @@ larc.reduction.pipeline <- function(lsi,lst,lsc,TAG='20160801',LARCDIR="/Users/b
   
   #read in the tables here. The initial read-in is slow if you use bz2. The lsc tables is > 4GB. May be a problem,
   #i recommend unzipping them outside of R.
-  #lsi <- read.csv(lsiname,sep=",")
-  #lst <- read.csv(lstname,sep=",")
-  #lsc <- read.csv(lscname,sep=",")
+  lsi <- read.csv(lsiname,sep=",")
+  lst <- read.csv(lstname,sep=",")
+  lsc <- read.csv(lscname,sep=",")
   
   #clean things up in the tables
   lsc <- reduce.lsc.table(lsc,lst)
@@ -54,6 +54,8 @@ larc.reduction.pipeline <- function(lsi,lst,lsc,TAG='20160801',LARCDIR="/Users/b
 reduce.lsi.table <- function(lsi)
 {
   
+  source('/Users/bkoester/Google Drive/code/REBUILD/LARC.GITHUB/larc.fill.act.score.R')
+  
   #the basic columns to keep
   cols <- c("STDNT_ID","STDNT_GNDR_SHORT_DES","STDNT_ETHNC_GRP_SHORT_DES","STDNT_BIRTH_MO","STDNT_BIRTH_YR",
             "EST_GROSS_FAM_INC_CD","HS_GPA","PRNT_MAX_ED_LVL_CD",
@@ -64,7 +66,10 @@ reduce.lsi.table <- function(lsi)
             "UM_UG_DGR_MAJOR_CNT",
             "UM_DGR_1_CMPLTN_TERM_CD","UM_DGR_2_CMPLTN_TERM_CD",
             "UM_DGR_1_MAJOR_1_DES","UM_DGR_1_MAJOR_2_DES","UM_DGR_2_MAJOR_1_DES","UM_DGR_2_MAJOR_2_DES",
-            "UM_DGR_1_ACAD_CRER_CD","UM_DGR_2_ACAD_CRER_CD")
+            "UM_DGR_1_ACAD_CRER_CD","UM_DGR_2_ACAD_CRER_CD",
+            "UM_DGR_1_MAJOR_1_CIP_CD","UM_DGR_1_MAJOR_1_CIP_DES","UM_DGR_1_MAJOR_2_CIP_CD","UM_DGR_1_MAJOR_2_CIP_DES",
+            "UM_DGR_2_MAJOR_1_CIP_CD","UM_DGR_2_MAJOR_1_CIP_DES","UM_DGR_2_MAJOR_2_CIP_CD","UM_DGR_2_MAJOR_2_CIP_DES")
+            
   
   #all the AP scores, regardless of date, etc.
   #hh <- grep('MAX_AP.+SCR',names(lsi),perl=TRUE)
@@ -127,6 +132,20 @@ reduce.lsi.table <- function(lsi)
   STEM_DGR_2_MAJOR_2_FLAG[is.na(lsi$UM_DGR_2_MAJOR_2_CIP_CD)] <- NA
   
   out <- data.frame(out,STEM_DGR_1_MAJOR_1_FLAG,STEM_DGR_2_MAJOR_1_FLAG,STEM_DGR_1_MAJOR_2_FLAG,STEM_DGR_2_MAJOR_2_FLAG)
+  
+  #fill in the missing ACTs
+  out <- larc.fill.act.score(out)
+  
+  #add in the median zip income
+  out <- add.zipcode.county.geoid(out)
+  
+  #add in the US REGION
+  US_REGION <- regional.state.codes(as.character(sub$HS_STATE_CD))
+  out       <- data.frame(out,US_REGION)
+  
+  #in the major division...only for dgr_1_major_1!
+  out   <- add.major.division(out)
+  
   
   return(out)
   
@@ -306,6 +325,9 @@ flag.general.stem <- function(vec)
 #select student course columns form the studnet course table, keeping ONLY courses taken for a grade.
 reduce.lsc.table <- function(lsc,lst)
 {
+  
+  source('/Users/bkoester/Google Drive/code/REBUILD/LARC.GITHUB/larc.cluster.grade.patterns.R')
+  
   print('filling out SC table')
   #tables cuts here
   e    <- lsc$GRD_BASIS_ENRL_DES == 'Graded'
@@ -349,6 +371,8 @@ reduce.lsc.table <- function(lsc,lst)
   nstart     <- which(data$count == 1)
   
   EOT_GPA    <- mat.or.vec(ntot,1)
+  BOT_GPA    <- mat.or.vec(ntot,1)
+  BOT_GPA[]  <- NA
   STEM_START <- EOT_GPA
   
   for (i in 1:nid)
@@ -369,20 +393,27 @@ reduce.lsc.table <- function(lsc,lst)
     {
       h <- which(sub$TERM_CD <= terms[j])
       m <- which(sub$TERM_CD == terms[j])
+      d <- which(sub$TERM_CD < terms[j])
       if (flag == 0 & (grepl('FA',sub$TERM_SHORT_DES) | grepl('WN',sub$TERM_SHORT_DES)))
       {
         STEM_START[ind] <- sum(sub$STEM_COURSE[m])
         flag <- 1
       }
-      EOT_GPA[ind[m]] <- sum(sub$GRD_PNTS_PER_UNIT_NBR[h]*sub$UNITS_ERND_NBR[h])/sum(sub$UNITS_ERND_NBR[h])
+      EOT_GPA[ind[m]] <- sum(sub$GRD_PNTS_PER_UNIT_NBR[h]*sub$UNITS_ERND_NBR[h],na.rm=TRUE)/sum(sub$UNITS_ERND_NBR[h],na.rm=TRUE)
+      if (length(d) > 0)
+      {
+        BOT_GPA[ind[m]] <- sum(sub$GRD_PNTS_PER_UNIT_NBR[d]*sub$UNITS_ERND_NBR[d],na.rm=TRUE)/sum(sub$UNITS_ERND_NBR[d],na.rm=TRUE)
+      }
     }
-    
-    #View(data.frame(sub,EOT_GPA[ind],STEM_START[ind]))
-    #scan()
     
   }
   
-  return(data.frame(data,EOT_GPA,STEM_START))
+  
+  #now do the clustering
+  out <- data.frame(data,EOT_GPA,BOT_GPA,STEM_START)
+  out <- larc.cluster.grade.patterns(out)
+  
+  return(out)
   
 }  
 
@@ -409,3 +440,151 @@ add.graduating.gpa <- function(lst,sr)
   return(out1)
   
 }
+
+#this adds a division to only the DGR1_MAJOR1 using my classifications.
+add.major.division <- function(data)
+{
+  aplan <- read.delim("/Users/bkoester/Box Sync/PublicDataSets/acad.plan.owners.csv")
+  dept <- read.delim("/Users/bkoester/Box Sync/PublicDataSets/dept.info.by.division.tab")
+  
+  engin <- mat.or.vec(length(dept$DIVISION),1)
+  natsci <- engin
+  human <- engin
+  socsci <- engin
+  DIVISION <- engin
+  s <- dept$DIVISION == 'S'
+  ss <- dept$DIVISION == 'SS'
+  h <- dept$DIVISION == 'H'
+  e <- dept$DIVISION == 'E'
+  
+  natsci[s]  <- 1
+  socsci[ss] <- 1
+  human[h]  <- 1
+  engin[e]   <- 1 
+  DIVISION[s]  <- 'NS'
+  DIVISION[ss] <- 'SS'
+  DIVISION[h]  <- 'H'
+  DIVISION[e]  <- 'E'
+  
+  dept <- data.frame(dept,natsci,socsci,human,engin,DIVISION)
+  
+  dept <- dept[,names(dept) %in% c("DEPT_DESCRFORMAL","natsci","socsci","human","engin","DIVISION")]
+  aplan <- aplan[,names(aplan) %in% c('Dept.Descrformal','Acad.Plan.Descr')]
+  
+  #Yank minors and duplicates, MS, PhD
+  aplan <- aplan[!duplicated(aplan$Acad.Plan.Descr),]
+  e     <- grep('minor',aplan$Acad.Plan.Descr,ignore.case=TRUE,invert=TRUE)
+  aplan <- aplan[e,]
+  e     <- grep('PhD',aplan$Acad.Plan.Descr,invert=TRUE)
+  aplan <- aplan[e,]
+  e     <- grep('MS',aplan$Acad.Plan.Descr,invert=TRUE)
+  aplan <- aplan[e,]
+  e     <- grep('MSE',aplan$Acad.Plan.Descr,invert=TRUE)
+  aplan <- aplan[e,]
+  e     <- grep('MEng',aplan$Acad.Plan.Descr,invert=TRUE)
+  aplan <- aplan[e,]
+  e     <- grep('PharmD',aplan$Acad.Plan.Descr,invert=TRUE)
+  aplan <- aplan[e,]
+  e     <- grep('DDS',aplan$Acad.Plan.Descr,invert=TRUE)
+  aplan <- aplan[e,]
+  e     <- grep('MPH',aplan$Acad.Plan.Descr,invert=TRUE)
+  aplan <- aplan[e,]
+  
+  #Now for each of 3 majors
+  
+  data <- data[,!names(data) %in% c("natsci","socsci","human","engin","DIVISION")]
+  data <- merge(data,aplan,by.x='UM_DGR_1_MAJOR_1_DES',by.y='Acad.Plan.Descr',all.x=TRUE)
+  data <- merge(data,dept,by.x='Dept.Descrformal',by.y='DEPT_DESCRFORMAL',all.x=TRUE)
+  return(data)
+}
+
+#the median income for each zipcode
+add.zipcode.county.geoid <- function(sr)
+{
+  
+  library(zipcode)
+  
+  #sr <- sr[,names(sr) %in% c("PERSON_POSTAL","PERSON_STATE")]
+  CLEAN_ZIP <- clean.zipcodes(sr$FIRST_US_PRMNNT_RES_PSTL_5_CD)
+  sr$CLEAN_ZIP <- CLEAN_ZIP
+  zc <- read.csv("/Users/bkoester/Google Drive/code/REBUILD/UMILA/data/zcta_county_rel_10.txt",header=TRUE,sep=",")
+  zc <- zc[,names(zc) %in% c("ZCTA5","GEOID")]
+  names(zc) <- c('ZCTA5','GEO_ID')
+  CLEAN_ZIP <- clean.zipcodes(zc$ZCTA5)
+  zc  <- data.frame(zc,CLEAN_ZIP)
+  hh <- merge(sr,zc,by='CLEAN_ZIP',all.x=TRUE)
+  hh <- hh[!duplicated(hh$STDNT_ID),]
+  #add in the county for this zip.
+  cty <- read.table('/Users/bkoester/Google Drive/code/REBUILD/UMILA/data/county_adjacency.txt',sep="\t",header=FALSE)
+  cty <- cty[,names(cty) %in% c('V3','V4')]
+  cty <- cty[!duplicated(cty$V3),]
+  names(cty) <- c('COUNTY','GEO_ID')
+  hh <- merge(hh,cty,by='GEO_ID',all.x=TRUE)
+  print(dim(hh))
+  
+  e <- which(hh$GEO_ID < 10000)
+  hh$GEO_ID[e] <- paste('0500000US0',hh$GEO_ID[e],sep="")
+  e <- which(hh$GEO_ID >= 10000)
+  hh$GEO_ID[e] <- paste('0500000US',hh$GEO_ID[e],sep="")
+  
+  #add in the median income
+  inc <- read.table('/Users/bkoester/Box\ Sync/PublicDataSets/median_income_zipcode_census.txt',
+                    sep='\t',header=TRUE)
+  inc <- inc[,names(inc) %in% c('Zip','Median')]
+  hh  <- merge(hh,inc,by.x='ZCTA5',by.y='Zip',all.x=TRUE)
+  hh$MEDNUM <- as.numeric(gsub(",", "", hh$Median))
+  
+  hh         <- hh[order(hh$GEO_ID), ]
+  hh$count <- sequence(rle(as.vector(hh$GEO_ID))$lengths)
+  
+  ncrse  <- length(hh$GEO_ID[!duplicated(hh$GEO_ID)])
+  nstart <- which(hh$count == 1)
+  ntot   <- length(hh$GEO_ID) 
+  MEDINC <- mat.or.vec(ntot,1)
+  
+  for (i in 1:ncrse)
+  {
+    start_ind <- nstart[i]
+    if (i < ncrse){stop_ind  <- nstart[i+1]-1}
+    if (i == ncrse){stop_ind <- ntot}
+    
+    ind         <- c(start_ind:stop_ind)
+    MEDINC[ind] <- mean(hh$MEDNUM[ind])
+    
+  }
+  
+  hh <- data.frame(hh,MEDINC)
+  
+  return(hh)
+  
+  
+}
+
+#classify national region by high school state CD 
+regional.state.codes <- function(twoCD)
+{
+  US_REGION <- mat.or.vec(length(twoCD),1)
+  US_REGION[] <- 'OTH/UNK'
+  
+  s   <- twoCD %in% c('FL','AL','GA','SC','NC','LA','MS','TX','AR','TN')
+  w   <- twoCD %in% c('CA','OR','WA','MT','ID','NV','UT','AZ','NM','CO','WY','HI','AK')
+  gl  <- twoCD %in% c('IL','WI','OH','IN')
+  mw  <- twoCD %in% c('MO','KS','NE','IA','MN','SD','ND','KY','OK','WV')
+  mi  <- twoCD %in% 'MI'
+  ca  <- twoCD %in% c('ON','BC','QC','AB')   
+  e   <- twoCD %in% c('MN','VT','NH','NY','PA','RI','NJ','MA','VA','DC','CT','DE')
+  is  <- twoCD %in% c('PR','GU')
+  
+  US_REGION[s] <- 'SOUTH'
+  US_REGION[w] <- 'WEST'
+  US_REGION[gl] <- 'GL'
+  US_REGION[mw] <- 'MIDWEST'
+  US_REGION[mi] <- 'MI'
+  US_REGION[ca] <- 'CA'
+  US_REGION[e]  <- 'EAST'
+  US_REGION[is]  <- 'PR/GU'
+  
+  return(US_REGION)
+}
+
+

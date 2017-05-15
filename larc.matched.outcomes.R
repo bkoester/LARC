@@ -116,7 +116,7 @@ larc.matched.outcomes <- function(data,variate,group1,group2,covariates,
   model <- do.call("glm",list(as.formula(mod),data=as.name("datalm"),family=binomial()))
   
   #...and execute the matching with a caliper set at 0.2 to increase speed...
-  m1    <- fullmatch(match_on(model,caliper=0.2),data=datalm)
+  m1    <- fullmatch(match_on(model,caliper=0.5),data=datalm)
 
   #comptue the post match balance statistics if VERBOSE
   if (verbose == TRUE)
