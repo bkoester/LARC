@@ -9,7 +9,7 @@ basic_derived_columns <- function()
 reduce.lsi.table <- function(lsi)
 {
   
-  source('/Users/bkoester/Google Drive/code/REBUILD/LARC.GITHUB/larc.fill.act.score.R')
+  #source('/Users/bkoester/Google Drive/code/REBUILD/LARC.GITHUB/larc.fill.act.score.R')
   
   #the basic columns to keep
   cols <- c("STDNT_ID","STDNT_GNDR_SHORT_DES","STDNT_ETHNC_GRP_SHORT_DES","STDNT_BIRTH_MO","STDNT_BIRTH_YR",
@@ -55,12 +55,6 @@ reduce.lsi.table <- function(lsi)
   keep <- cols
   out  <- lsi[,keep]
   
-  #add in the median zip income
-  out <- add.zipcode.county.geoid(out)
-  
-  #in the major division...only for dgr_1_major_1!
-  out   <- add.major.division(out)
-  
   #add in the first gen flag
   e <- out$PRNT_MAX_ED_LVL_CD %in% c(202,203,204,206,205,19,61)
   FIRST_GEN <- mat.or.vec(dim(out)[1],1)
@@ -76,8 +70,6 @@ reduce.lsi.table <- function(lsi)
 #select student course columns form the studnet course table, keeping ONLY courses taken for a grade.
 reduce.lsc.table <- function(lsc,lst)
 {
-  
-  source('/Users/bkoester/Google Drive/code/REBUILD/LARC.GITHUB/larc.cluster.grade.patterns.R')
   
   print('filling out SC table')
   #tables cuts here
@@ -169,6 +161,7 @@ reduce.lsc.table <- function(lsc,lst)
   
   #now do the clustering
   out <- data.frame(data,EOT_GPA,BOT_GPA,STEM_START)
+  out <- larc.cluster.grade.patterns(out)
   
   return(out)
   

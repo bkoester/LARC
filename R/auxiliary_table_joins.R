@@ -1,16 +1,14 @@
-auxiliary_table_joins <- function()
+auxiliary_table_joins <- function(data,CODEDIR=CODEDIR)
 {
-  
-  
-  
-  
+
 }
 
 #this adds a division to only the DGR1_MAJOR1 using my classifications.
-add.major.division <- function(data)
+add.major.division <- function(data,DATADIR=DATADIR)
 {
-  aplan <- read.delim("/Users/bkoester/Box Sync/PublicDataSets/acad.plan.owners.csv")
-  dept <- read.delim("/Users/bkoester/Box Sync/PublicDataSets/dept.info.by.division.tab")
+  
+  aplan <- read.delim(paste(DATADIR,"acad.plan.owners.csv",sep=""))
+  dept <- read.delim(paste(DATADIR,"dept.info.by.division.tab",sep=""))
   
   engin <- mat.or.vec(length(dept$DIVISION),1)
   natsci <- engin
@@ -64,15 +62,13 @@ add.major.division <- function(data)
 }
 
 #the median income for each zipcode
-add.zipcode.county.geoid <- function(sr)
+add.zipcode.county.geoid <- function(sr,DATADIR=DATADIR)
 {
-  
-  library(zipcode)
   
   #sr <- sr[,names(sr) %in% c("PERSON_POSTAL","PERSON_STATE")]
   CLEAN_ZIP <- clean.zipcodes(sr$FIRST_US_PRMNNT_RES_PSTL_5_CD)
   sr$CLEAN_ZIP <- CLEAN_ZIP
-  zc <- read.csv("/Users/bkoester/Google Drive/code/REBUILD/UMILA/data/zcta_county_rel_10.txt",header=TRUE,sep=",")
+  zc <- read.csv(paste(DATADIR,"zcta_county_rel_10.txt",sep=""),header=TRUE,sep=",")
   zc <- zc[,names(zc) %in% c("ZCTA5","GEOID")]
   names(zc) <- c('ZCTA5','GEO_ID')
   CLEAN_ZIP <- clean.zipcodes(zc$ZCTA5)
@@ -80,7 +76,7 @@ add.zipcode.county.geoid <- function(sr)
   hh <- merge(sr,zc,by='CLEAN_ZIP',all.x=TRUE)
   hh <- hh[!duplicated(hh$STDNT_ID),]
   #add in the county for this zip.
-  cty <- read.table('/Users/bkoester/Google Drive/code/REBUILD/UMILA/data/county_adjacency.txt',sep="\t",header=FALSE)
+  cty <- read.table(paste(DATADIR,"county_adjacency.txt",sep=""),sep="\t",header=FALSE)
   cty <- cty[,names(cty) %in% c('V3','V4')]
   cty <- cty[!duplicated(cty$V3),]
   names(cty) <- c('COUNTY','GEO_ID')
@@ -93,7 +89,7 @@ add.zipcode.county.geoid <- function(sr)
   hh$GEO_ID[e] <- paste('0500000US',hh$GEO_ID[e],sep="")
   
   #add in the median income
-  inc <- read.table('/Users/bkoester/Box\ Sync/PublicDataSets/median_income_zipcode_census.txt',
+  inc <- read.table(paste(DATADIR,"median_income_zipcode_census.txt",sep=""),
                     sep='\t',header=TRUE)
   inc <- inc[,names(inc) %in% c('Zip','Median')]
   hh  <- merge(hh,inc,by.x='ZCTA5',by.y='Zip',all.x=TRUE)
