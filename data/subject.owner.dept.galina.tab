@@ -1,0 +1,520 @@
+deptid	subject_dept	acad_dept	dept_group	div	subject
+000000	NA	NA	NA	NA	TRGENCR
+000000	NA	NA	NA	NA	ADJTRCR
+000000	NA	NA	NA	NA	INTERNS
+000000	NA	NA	NA	NA	PRECALTC
+000000	NA	NA	NA	NA	UGTOTADJ
+000000	NA	NA	NA	NA	INTERSS
+000000	NA	NA	NA	NA	ENGCMPTC
+000000	NA	NA	NA	NA	INTERHUM
+000000	NA	NA	NA	NA	INTERID
+170000	College of Literature, Science, and the Arts	Literature, Science & the Arts	COLLEGE_OF_LSA	O	AMERINST
+170000	College of Literature, Science, and the Arts	Literature, Science & the Arts	COLLEGE_OF_LSA	O	COLLEGE
+170000	College of Literature, Science, and the Arts	Literature, Science & the Arts	COLLEGE_OF_LSA	O	SPEECH
+170000	College of Literature, Science, and the Arts	Literature, Science & the Arts	COLLEGE_OF_LSA	O	GEOG
+170000	College of Literature, Science, and the Arts	Literature, Science & the Arts	COLLEGE_OF_LSA	O	JOURN
+170000	College of Literature, Science, and the Arts	Literature, Science & the Arts	COLLEGE_OF_LSA	O	CCP
+170000	College of Literature, Science, and the Arts	Literature, Science & the Arts	COLLEGE_OF_LSA	O	INTINS
+170000	College of Literature, Science, and the Arts	Literature, Science & the Arts	COLLEGE_OF_LSA	O	THTRELSA
+170000	College of Literature, Science, and the Arts	Literature, Science & the Arts	COLLEGE_OF_LSA	O	POPSTD
+170400	Lloyd Hall Scholars Program	Literature, Science & the Arts	COLLEGE_OF_LSA	O	LHSP
+171100	Humanities Institute	Literature, Science & the Arts	COLLEGE_OF_LSA	H	INSTHUM
+171500	Office of International Programs	Literature, Science & the Arts	COLLEGE_OF_LSA	O	STDABRD
+171800	College of L S & A Inteflex Program	Literature, Science & the Arts	COLLEGE_OF_LSA	O	INTEFLEX
+171900	LS&A First Year Seminars	Literature, Science & the Arts	COLLEGE_OF_LSA	O	UC
+172000	Anthropology Department	Literature, Science & the Arts	COLLEGE_OF_LSA	SS	ANTHRBIO
+172000	Anthropology Department	Literature, Science & the Arts	COLLEGE_OF_LSA	SS	ANTHRARC
+172000	Anthropology Department	Literature, Science & the Arts	COLLEGE_OF_LSA	SS	ANTHRCUL
+172500	Astronomy Department	Literature, Science & the Arts	COLLEGE_OF_LSA	S	ASTRO
+173300	Program in the Environment	Literature, Science & the Arts	COLLEGE_OF_LSA	S	ENVIRON
+173500	Chemistry Department	Literature, Science & the Arts	COLLEGE_OF_LSA	S	CHEM
+174000	Classical Studies Department	Literature, Science & the Arts	COLLEGE_OF_LSA	H	CLLING
+174000	Classical Studies Department	Literature, Science & the Arts	COLLEGE_OF_LSA	H	GTBOOKS
+174000	Classical Studies Department	Literature, Science & the Arts	COLLEGE_OF_LSA	H	GREEKMOD
+174000	Classical Studies Department	Literature, Science & the Arts	COLLEGE_OF_LSA	H	GREEK
+174000	Classical Studies Department	Literature, Science & the Arts	COLLEGE_OF_LSA	H	MODGREEK
+174000	Classical Studies Department	Literature, Science & the Arts	COLLEGE_OF_LSA	H	CLCIV
+174000	Classical Studies Department	Literature, Science & the Arts	COLLEGE_OF_LSA	H	CLARCH
+174000	Classical Studies Department	Literature, Science & the Arts	COLLEGE_OF_LSA	H	LATIN
+174600	Program In Computer Science	Literature, Science & the Arts	COLLEGE_OF_LSA	S	CMPTRSC
+174700	Organizational Studies	Literature, Science & the Arts	COLLEGE_OF_LSA	SS	ORGSTUDY
+175000	Economics Department	Literature, Science & the Arts	COLLEGE_OF_LSA	SS	ECON
+175500	English Language & Literature Dept	Literature, Science & the Arts	COLLEGE_OF_LSA	H	ECB
+175500	English Language & Literature Dept	Literature, Science & the Arts	COLLEGE_OF_LSA	H	ENGLISH
+175600	Sweetland Center for Writing	Literature, Science & the Arts	COLLEGE_OF_LSA	O	SWC
+175600	Sweetland Center for Writing	Literature, Science & the Arts	COLLEGE_OF_LSA	O	WRITING
+176000	Asian Languages And Cultures	Literature, Science & the Arts	COLLEGE_OF_LSA	H	ASIAN
+176000	Asian Languages And Cultures	Literature, Science & the Arts	COLLEGE_OF_LSA	H	BUDDHST
+176000	Asian Languages And Cultures	Literature, Science & the Arts	COLLEGE_OF_LSA	H	KOREAN
+176000	Asian Languages And Cultures	Literature, Science & the Arts	COLLEGE_OF_LSA	H	CHIN
+176000	Asian Languages And Cultures	Literature, Science & the Arts	COLLEGE_OF_LSA	H	JAPANESE
+176000	Asian Languages And Cultures	Literature, Science & the Arts	COLLEGE_OF_LSA	H	ASIANLAN
+176000	Asian Languages And Cultures	Literature, Science & the Arts	COLLEGE_OF_LSA	H	SSEA
+177000	Earth and Environmental Sciences	Literature, Science & the Arts	COLLEGE_OF_LSA	S	GEOSCI
+177000	Earth and Environmental Sciences	Literature, Science & the Arts	COLLEGE_OF_LSA	S	EARTH
+178000	Germanic Languages & Lit Dept	Literature, Science & the Arts	COLLEGE_OF_LSA	H	SCAND
+178000	Germanic Languages & Lit Dept	Literature, Science & the Arts	COLLEGE_OF_LSA	H	GERMAN
+178000	Germanic Languages & Lit Dept	Literature, Science & the Arts	COLLEGE_OF_LSA	H	DUTCH
+179000	History Department	Literature, Science & the Arts	COLLEGE_OF_LSA	H	HISTORY
+179000-SR	Medieval and Early Modern Studies	Literature, Science & the Arts	 	H	MARC
+179000-SR	Medieval and Early Modern Studies	Literature, Science & the Arts	 	H	MEMS
+179100	Judaic Studies Program	Literature, Science & the Arts	COLLEGE_OF_LSA	H	YIDDISH
+179100	Judaic Studies Program	Literature, Science & the Arts	COLLEGE_OF_LSA	H	JUDAIC
+179500	History Of Art Department	Literature, Science & the Arts	COLLEGE_OF_LSA	H	MUSEUMS
+179500	History Of Art Department	Literature, Science & the Arts	COLLEGE_OF_LSA	H	HISTART
+180000	Honors Program	Literature, Science & the Arts	COLLEGE_OF_LSA	O	HONORS
+181200	Department of Linguistics	Literature, Science & the Arts	COLLEGE_OF_LSA	SS	LING
+181200	Department of Linguistics	Literature, Science & the Arts	COLLEGE_OF_LSA	SS	COGSCI
+181500	English Language Institute	Literature, Science & the Arts	COLLEGE_OF_LSA	H	ELI
+183000	Mathematics Department	Literature, Science & the Arts	COLLEGE_OF_LSA	S	MATH
+183500	Near Eastern Studies Department	Literature, Science & the Arts	COLLEGE_OF_LSA	H	ANCBIBL
+183500	Near Eastern Studies Department	Literature, Science & the Arts	COLLEGE_OF_LSA	H	TURKISH
+183500	Near Eastern Studies Department	Literature, Science & the Arts	COLLEGE_OF_LSA	H	NESLANG
+183500	Near Eastern Studies Department	Literature, Science & the Arts	COLLEGE_OF_LSA	H	NELC
+183500	Near Eastern Studies Department	Literature, Science & the Arts	COLLEGE_OF_LSA	H	AAPTIS
+183500	Near Eastern Studies Department	Literature, Science & the Arts	COLLEGE_OF_LSA	H	NES
+183500	Near Eastern Studies Department	Literature, Science & the Arts	COLLEGE_OF_LSA	H	ARMENIAN
+183500	Near Eastern Studies Department	Literature, Science & the Arts	COLLEGE_OF_LSA	H	ARABIC
+183500	Near Eastern Studies Department	Literature, Science & the Arts	COLLEGE_OF_LSA	H	PERSIAN
+183500	Near Eastern Studies Department	Literature, Science & the Arts	COLLEGE_OF_LSA	H	HJCS
+183500	Near Eastern Studies Department	Literature, Science & the Arts	COLLEGE_OF_LSA	H	NEAREAST
+183500	Near Eastern Studies Department	Literature, Science & the Arts	COLLEGE_OF_LSA	H	HEBREW
+183500	Near Eastern Studies Department	Literature, Science & the Arts	COLLEGE_OF_LSA	H	IRANIAN
+183500	Near Eastern Studies Department	Literature, Science & the Arts	COLLEGE_OF_LSA	H	ACABS
+184000	Philosophy Department	Literature, Science & the Arts	COLLEGE_OF_LSA	H	PHIL
+184000	Philosophy Department	Literature, Science & the Arts	COLLEGE_OF_LSA	H	PPE
+184500	Physics Department	Literature, Science & the Arts	COLLEGE_OF_LSA	S	PHYSICS
+184600	Applied Physics Program	Literature, Science & the Arts	COLLEGE_OF_LSA	S	APPPHYS
+185000	Political Science Department	Literature, Science & the Arts	COLLEGE_OF_LSA	SS	POLSCI
+185500	Psychology Department	Literature, Science & the Arts	COLLEGE_OF_LSA	SS	PSYCH
+186000	College of L S & A Residential College	Literature, Science & the Arts	COLLEGE_OF_LSA	O	RCHUMS
+186000	College of L S & A Residential College	Literature, Science & the Arts	COLLEGE_OF_LSA	O	RCSSCI
+186000	College of L S & A Residential College	Literature, Science & the Arts	COLLEGE_OF_LSA	O	RCARTS
+186000	College of L S & A Residential College	Literature, Science & the Arts	COLLEGE_OF_LSA	O	RCCORE
+186000	College of L S & A Residential College	Literature, Science & the Arts	COLLEGE_OF_LSA	O	RCNSCI
+186000	College of L S & A Residential College	Literature, Science & the Arts	COLLEGE_OF_LSA	O	RCMATH
+186000	College of L S & A Residential College	Literature, Science & the Arts	COLLEGE_OF_LSA	O	RCASL
+186000	College of L S & A Residential College	Literature, Science & the Arts	COLLEGE_OF_LSA	O	ENVRNSTD
+186000	College of L S & A Residential College	Literature, Science & the Arts	COLLEGE_OF_LSA	O	RCLANG
+186000	College of L S & A Residential College	Literature, Science & the Arts	COLLEGE_OF_LSA	O	RCIDIV
+186000	College of L S & A Residential College	Literature, Science & the Arts	COLLEGE_OF_LSA	O	RCISCI
+186500	Romance Languages Department	Literature, Science & the Arts	COLLEGE_OF_LSA	H	ITALIAN
+186500	Romance Languages Department	Literature, Science & the Arts	COLLEGE_OF_LSA	H	PORTUG
+186500	Romance Languages Department	Literature, Science & the Arts	COLLEGE_OF_LSA	H	ROMLANG
+186500	Romance Languages Department	Literature, Science & the Arts	COLLEGE_OF_LSA	H	ROMANIAN
+186500	Romance Languages Department	Literature, Science & the Arts	COLLEGE_OF_LSA	H	FRENCH
+186500	Romance Languages Department	Literature, Science & the Arts	COLLEGE_OF_LSA	H	ROMLING
+186500	Romance Languages Department	Literature, Science & the Arts	COLLEGE_OF_LSA	H	SPANISH
+187000	Slavic Languages & Lit Dept	Literature, Science & the Arts	COLLEGE_OF_LSA	H	CZECH
+187000	Slavic Languages & Lit Dept	Literature, Science & the Arts	COLLEGE_OF_LSA	H	UKR
+187000	Slavic Languages & Lit Dept	Literature, Science & the Arts	COLLEGE_OF_LSA	H	RUSSIAN
+187000	Slavic Languages & Lit Dept	Literature, Science & the Arts	COLLEGE_OF_LSA	H	SLAVIC
+187000	Slavic Languages & Lit Dept	Literature, Science & the Arts	COLLEGE_OF_LSA	H	POLISH
+187000	Slavic Languages & Lit Dept	Literature, Science & the Arts	COLLEGE_OF_LSA	H	UKRAINE
+187000	Slavic Languages & Lit Dept	Literature, Science & the Arts	COLLEGE_OF_LSA	H	SERBOCRO
+187000	Slavic Languages & Lit Dept	Literature, Science & the Arts	COLLEGE_OF_LSA	H	BCS
+187500	Sociology Department	Literature, Science & the Arts	COLLEGE_OF_LSA	SS	SOC
+188300	Communication Studies	Literature, Science & the Arts	COLLEGE_OF_LSA	SS	MASSCOMM
+188300	Communication Studies	Literature, Science & the Arts	COLLEGE_OF_LSA	SS	COMM
+188500	Statistics Department	Literature, Science & the Arts	COLLEGE_OF_LSA	S	STATS
+188700	Women's Studies Department	Literature, Science & the Arts	COLLEGE_OF_LSA	H	WOMENSTD
+188900	Biology Department	Literature, Science & the Arts	COLLEGE_OF_LSA	S	BOTANY
+188900	Biology Department	Literature, Science & the Arts	COLLEGE_OF_LSA	S	ZOOLOGY
+188900	Biology Department	Literature, Science & the Arts	COLLEGE_OF_LSA	S	BIOLOGY
+189000	Molecular, Cellular, and Developmental Biology	Literature, Science & the Arts	COLLEGE_OF_LSA	S	MCDB
+189100	Ecology & Evolutionary Biology	Literature, Science & the Arts	COLLEGE_OF_LSA	S	EEB
+190000	International Institute	Literature, Science & the Arts	COLLEGE_OF_LSA	SS	CICS
+190000	International Institute	Literature, Science & the Arts	COLLEGE_OF_LSA	SS	INTLSTD
+190300	Department of Afro-American and African Studies	Literature, Science & the Arts	COLLEGE_OF_LSA	SS	CAAS
+190300	Department of Afro-American and African Studies	Literature, Science & the Arts	COLLEGE_OF_LSA	SS	AAS
+191000	Center For Chinese Studies	Literature, Science & the Arts	COLLEGE_OF_LSA	H	CCS
+191200	Comprehensive Studies Program	Literature, Science & the Arts	COLLEGE_OF_LSA	O	CSP
+191400	Comparative Literature Program	Literature, Science & the Arts	COLLEGE_OF_LSA	H	COMPLIT
+191600	Screen Arts and Cultures	Literature, Science & the Arts	COLLEGE_OF_LSA	H	SAC
+191600	Screen Arts and Cultures	Literature, Science & the Arts	COLLEGE_OF_LSA	H	FILMVID
+192000	Center For Japanese Studies	Literature, Science & the Arts	COLLEGE_OF_LSA	H	CJS
+192500	Center for Middle Eastern & North African Studies	Literature, Science & the Arts	COLLEGE_OF_LSA	H	MENAS
+193000	American Culture Program	Literature, Science & the Arts	COLLEGE_OF_LSA	H	NATIVEAM
+193000	American Culture Program	Literature, Science & the Arts	COLLEGE_OF_LSA	H	AMCULT
+193000	American Culture Program	Literature, Science & the Arts	COLLEGE_OF_LSA	H	ARABAM
+193000	American Culture Program	Literature, Science & the Arts	COLLEGE_OF_LSA	H	ASIANPAM
+193000	American Culture Program	Literature, Science & the Arts	COLLEGE_OF_LSA	H	LATINOAM
+194000	Center for Russian, E. European & Eurasian Studies	Literature, Science & the Arts	COLLEGE_OF_LSA	H	REEES
+194000	Center for Russian, E. European & Eurasian Studies	Literature, Science & the Arts	COLLEGE_OF_LSA	H	REES
+194400	South Asian Studies	Literature, Science & the Arts	COLLEGE_OF_LSA	H	SAS
+194500	South East Asian Studies	Literature, Science & the Arts	COLLEGE_OF_LSA	H	SEAS
+194700	Studies In Religion	Literature, Science & the Arts	COLLEGE_OF_LSA	H	RELIGION
+195000	Center For West European Studi	Literature, Science & the Arts	COLLEGE_OF_LSA	H	WEURSTD
+195000	Center For West European Studi	Literature, Science & the Arts	COLLEGE_OF_LSA	H	EURO
+195100	Latin Amer & Carribean Studies	Literature, Science & the Arts	COLLEGE_OF_LSA	H	LACS
+201000	Exhibit Museum	Stamps School of Art & Design	COLLEGE_OF_LSA	H	MUSMETH
+210000	College Of Engineering	Engineering	COLLEGE_ENGINEERING	E	CICE
+210000	College Of Engineering	Engineering	COLLEGE_ENGINEERING	E	HUM
+210308	CoE Robotics Institute	Engineering	COLLEGE_ENGINEERING	E	ROB
+210400	Engineering Undergraduate Educ	Engineering	COLLEGE_ENGINEERING	E	ENTR
+210400	Engineering Undergraduate Educ	Engineering	COLLEGE_ENGINEERING	E	ENGR
+210501	Engineering Study Abroad	Engineering	COLLEGE_ENGINEERING	E	ENGINSA
+210503	Integrative Systems and Design	Engineering	COLLEGE_ENGINEERING	E	ESENG
+210503	Integrative Systems and Design	Engineering	COLLEGE_ENGINEERING	E	RAV
+210503	Integrative Systems and Design	Engineering	COLLEGE_ENGINEERING	E	SEND
+210503	Integrative Systems and Design	Engineering	COLLEGE_ENGINEERING	E	AUTO
+210503	Integrative Systems and Design	Engineering	COLLEGE_ENGINEERING	E	ISD
+210503	Integrative Systems and Design	Engineering	COLLEGE_ENGINEERING	E	FINENG
+210600	Biomedical Engineering	Engineering	COLLEGE_ENGINEERING	E	BIOMEDE
+210700	Program In Manufacturing	Engineering	COLLEGE_ENGINEERING	E	MFG
+211030	Macromolecular Sci & Engr Ctr	Literature, Science & the Arts	COLLEGE_ENGINEERING	E	MACROMOL
+211500	NA	NA	NA	NA	ENSCEN
+212000	Aerospace Engineering	Engineering	COLLEGE_ENGINEERING	E	AEROSP
+213000	Chemical Engineering Department	Engineering	COLLEGE_ENGINEERING	E	CHE
+214000	NA	NA	NA	NA	CTENGED
+215000	Civil & Environmental Engr	Engineering	COLLEGE_ENGINEERING	E	CEE
+216000	Electrical Engr & Computer Sci	Engineering	COLLEGE_ENGINEERING	E	EECS
+220000	Technical Communication	Engineering	COLLEGE_ENGINEERING	E	TCHNCLCM
+221000	Industrial-Operations Engr Dep	Engineering	COLLEGE_ENGINEERING	E	IOE
+221800	Materials Science & Engineering	Engineering	COLLEGE_ENGINEERING	E	MATSCIE
+222500	Mech Eng & Applied Mech Dept	Engineering	COLLEGE_ENGINEERING	E	AMES
+222500	Mech Eng & Applied Mech Dept	Engineering	COLLEGE_ENGINEERING	E	MECHENG
+224000	Atm, Oceanic And Space Science	Engineering	COLLEGE_ENGINEERING	E	AOSS
+225500	Naval Arch & Marine Engr Dept	Engineering	COLLEGE_ENGINEERING	E	NAVARCH
+227000	Nuclear Engr & Radiological Sci	Engineering	COLLEGE_ENGINEERING	E	NERS
+227100	Design Science Program	Rackham	COLLEGE_ENGINEERING	S	DESCI
+230000	Medical School	Medicine	MEDICAL_SCHOOL	P	PHYSACOU
+230000	Medical School	Medicine	MEDICAL_SCHOOL	P	NEUBEHS
+230000	Medical School	Medicine	MEDICAL_SCHOOL	P	RADIOL
+230000	Medical School	Medicine	MEDICAL_SCHOOL	P	INFLXMED
+230000	Medical School	Medicine	MEDICAL_SCHOOL	P	INTERPHA
+230000	Medical School	Medicine	MEDICAL_SCHOOL	P	MEDPH
+230000	Medical School	Medicine	MEDICAL_SCHOOL	P	FAMMED
+230000	Medical School	Medicine	MEDICAL_SCHOOL	P	EMERGMED
+230000	Medical School	Medicine	MEDICAL_SCHOOL	P	PHYSMED
+230000	Medical School	Medicine	MEDICAL_SCHOOL	P	CLININST
+230000	Medical School	Medicine	MEDICAL_SCHOOL	P	MEDELECT
+230000	Medical School	Medicine	MEDICAL_SCHOOL	P	CLNHLSC
+230059	Cancer Biology Graduate Program	Medicine	MEDICAL_SCHOOL	S	CANCBIO
+231000	Medical School Administration	Medicine	MEDICAL_SCHOOL	SS	MEDICINE
+231000	Medical School Administration	Medicine	MEDICAL_SCHOOL	SS	MEDADM
+231000	Medical School Administration	Medicine	MEDICAL_SCHOOL	SS	IMMUNO
+231000-SR	Program in Biomedical Sciences	Medicine	 	S	PIBS
+231050	Cellular and Molecular Biology	Literature, Science & the Arts	MEDICAL_SCHOOL	S	CMBIOL
+231350	Bioinformatics	Medicine	MEDICAL_SCHOOL	S	BIOINF
+232000	Cell and Developmental Biology	Medicine	MEDICAL_SCHOOL	S	ANAT
+232000	Cell and Developmental Biology	Medicine	MEDICAL_SCHOOL	S	CDB
+233000	NA	NA	NA	NA	ANESTH
+234000	Biological Chemistry Departmen	Medicine	MEDICAL_SCHOOL	S	BIOLCHEM
+235000	NA	NA	NA	NA	DERM
+236000	Human Genetics Department	Medicine	MEDICAL_SCHOOL	S	HUMGEN
+237000	Internal Medicine Department	Medicine	MEDICAL_SCHOOL	S	INTMED
+239800	Int Med-General Medicine	Medicine	MEDICAL_SCHOOL	S	HHCR
+245000	Microbiology And Immunology	Medicine	MEDICAL_SCHOOL	S	MICRBIOL
+246000	Neurology Department	Medicine	MEDICAL_SCHOOL	S	NEUROL
+247000	NA	NA	NA	NA	OBSTGYN
+248000	Ophthalmology Department	Medicine	MEDICAL_SCHOOL	S	OPHTH
+249000	NA	NA	NA	NA	OTO
+251000	Pathology Department	Medicine	MEDICAL_SCHOOL	S	PATH
+252000	NA	NA	NA	NA	PEDIAT
+253000	Pharmacology Department	Medicine	MEDICAL_SCHOOL	S	PHRMACOL
+254000	Physical Medicine & Rehab Dept	Medicine	MEDICAL_SCHOOL	S	PMR
+257000	Physiology Department	Medicine	MEDICAL_SCHOOL	S	PHYSIOL
+258000	Pg Medicine & Hlth Prof Edu De	Medicine	MEDICAL_SCHOOL	SS	PGMED
+258000	Pg Medicine & Hlth Prof Edu De	Medicine	MEDICAL_SCHOOL	SS	MEDEDUC
+258600	Division of Anatomical Science	Medicine	MEDICAL_SCHOOL	S	ANATOMY
+260000	NA	NA	NA	NA	PSYCHIAT
+301500	NA	NA	NA	NA	RADONCO
+302000	NA	NA	NA	NA	SURGERY
+303000	Neurosurgery	Medicine	MEDICAL_SCHOOL	S	NEUSURG
+304000	NA	NA	NA	NA	ORTHSURG
+305500	NA	NA	NA	NA	UROLOGY
+307000	Center For Neuroscience	Medicine	MEDICAL_SCHOOL	S	NEUROSCI
+372100	College of Architecture & Urban Planning	Architecture & Urban Planning	COLL_ARCH_URN_PLN	O	UD
+372100	College of Architecture & Urban Planning	Architecture & Urban Planning	COLL_ARCH_URN_PLN	O	UP
+372100	College of Architecture & Urban Planning	Architecture & Urban Planning	COLL_ARCH_URN_PLN	O	ARCH
+373000	School Of Art And Design	Stamps School of Art & Design	SCHOOL_ART_DESIGN	H	INTPERF
+373000	School Of Art And Design	Stamps School of Art & Design	SCHOOL_ART_DESIGN	H	ARTDES
+373000	School Of Art And Design	Stamps School of Art & Design	SCHOOL_ART_DESIGN	H	MEDILLUS
+373000	School Of Art And Design	Stamps School of Art & Design	SCHOOL_ART_DESIGN	H	UARTS
+373000	School Of Art And Design	Stamps School of Art & Design	SCHOOL_ART_DESIGN	H	ARTEDD
+373000	School Of Art And Design	Stamps School of Art & Design	SCHOOL_ART_DESIGN	H	ADABRD
+380000	School of Business Administration	Ross School of Business	SCHOOL_BUS_ADMIN	P	IB
+380000	School of Business Administration	Ross School of Business	SCHOOL_BUS_ADMIN	P	CSIB
+380000	School of Business Administration	Ross School of Business	SCHOOL_BUS_ADMIN	P	MKT
+380000	School of Business Administration	Ross School of Business	SCHOOL_BUS_ADMIN	P	CS
+380000	School of Business Administration	Ross School of Business	SCHOOL_BUS_ADMIN	P	TO
+380000	School of Business Administration	Ross School of Business	SCHOOL_BUS_ADMIN	P	WMBA
+380000	School of Business Administration	Ross School of Business	SCHOOL_BUS_ADMIN	P	OMS
+380000	School of Business Administration	Ross School of Business	SCHOOL_BUS_ADMIN	P	EMBA
+380000	School of Business Administration	Ross School of Business	SCHOOL_BUS_ADMIN	P	FIN
+380000	School of Business Administration	Ross School of Business	SCHOOL_BUS_ADMIN	P	PC
+380000	School of Business Administration	Ross School of Business	SCHOOL_BUS_ADMIN	P	RE
+380000	School of Business Administration	Ross School of Business	SCHOOL_BUS_ADMIN	P	BA
+380000	School of Business Administration	Ross School of Business	SCHOOL_BUS_ADMIN	P	MO
+380000	School of Business Administration	Ross School of Business	SCHOOL_BUS_ADMIN	P	OB
+380000	School of Business Administration	Ross School of Business	SCHOOL_BUS_ADMIN	P	BIT
+380000	School of Business Administration	Ross School of Business	SCHOOL_BUS_ADMIN	P	OM
+380000	School of Business Administration	Ross School of Business	SCHOOL_BUS_ADMIN	P	ACC
+380000	School of Business Administration	Ross School of Business	SCHOOL_BUS_ADMIN	P	BCOM
+380000	School of Business Administration	Ross School of Business	SCHOOL_BUS_ADMIN	P	BUSABRD
+380000	School of Business Administration	Ross School of Business	SCHOOL_BUS_ADMIN	P	STRATEGY
+380000	School of Business Administration	Ross School of Business	SCHOOL_BUS_ADMIN	P	ES
+380000	School of Business Administration	Ross School of Business	SCHOOL_BUS_ADMIN	P	INSUR
+380000	School of Business Administration	Ross School of Business	SCHOOL_BUS_ADMIN	P	LHC
+380000	School of Business Administration	Ross School of Business	SCHOOL_BUS_ADMIN	P	SMS
+380000	School of Business Administration	Ross School of Business	SCHOOL_BUS_ADMIN	P	BL
+380000	School of Business Administration	Ross School of Business	SCHOOL_BUS_ADMIN	P	CIS
+380000	School of Business Administration	Ross School of Business	SCHOOL_BUS_ADMIN	P	BE
+390000	School Of Dentistry	Dentistry	SCHOOL_DENTISTRY	P	ORTHO
+390000	School Of Dentistry	Dentistry	SCHOOL_DENTISTRY	P	PROSTHOD
+390000	School Of Dentistry	Dentistry	SCHOOL_DENTISTRY	P	DHYGRACK
+390000	School Of Dentistry	Dentistry	SCHOOL_DENTISTRY	P	ENDODONT
+390000	School Of Dentistry	Dentistry	SCHOOL_DENTISTRY	P	ORALSURG
+390000	School Of Dentistry	Dentistry	SCHOOL_DENTISTRY	P	DENTTHER
+390000	School Of Dentistry	Dentistry	SCHOOL_DENTISTRY	P	PGDENT
+390000	School Of Dentistry	Dentistry	SCHOOL_DENTISTRY	P	PERIODON
+390000	School Of Dentistry	Dentistry	SCHOOL_DENTISTRY	P	RESTORA
+390000	School Of Dentistry	Dentistry	SCHOOL_DENTISTRY	P	ORALHEAL
+390000	School Of Dentistry	Dentistry	SCHOOL_DENTISTRY	P	DENTMAT
+390000	School Of Dentistry	Dentistry	SCHOOL_DENTISTRY	P	DENT
+390000	School Of Dentistry	Dentistry	SCHOOL_DENTISTRY	P	ORALPATH
+390000	School Of Dentistry	Dentistry	SCHOOL_DENTISTRY	P	HOSPDENT
+390000	School Of Dentistry	Dentistry	SCHOOL_DENTISTRY	P	ORALBIOL
+390000	School Of Dentistry	Dentistry	SCHOOL_DENTISTRY	P	DENTPROS
+390000	School Of Dentistry	Dentistry	SCHOOL_DENTISTRY	P	BIOMATLS
+390000	School Of Dentistry	Dentistry	SCHOOL_DENTISTRY	P	DENTED
+390000	School Of Dentistry	Dentistry	SCHOOL_DENTISTRY	P	ORALDIAG
+390000	School Of Dentistry	Dentistry	SCHOOL_DENTISTRY	P	PEDDENT
+393500	Dental Hygiene-Dentistry	Dental Hygiene	SCHOOL_DENTISTRY	P	DENTHYG
+393500	Dental Hygiene-Dentistry	Dental Hygiene	SCHOOL_DENTISTRY	P	HYGDCE
+393500	Dental Hygiene-Dentistry	Dental Hygiene	SCHOOL_DENTISTRY	P	HYGDCC
+405000	School Of Education	Education	SCHOOL_EDUCATION	SS	EDBEHAVR
+405000	School Of Education	Education	SCHOOL_EDUCATION	SS	EDUC
+405000	School Of Education	Education	SCHOOL_EDUCATION	SS	EDCOMMDV
+405000	School Of Education	Education	SCHOOL_EDUCATION	SS	EDSPCL
+405000	School Of Education	Education	SCHOOL_EDUCATION	SS	EDADMIN
+405000	School Of Education	Education	SCHOOL_EDUCATION	SS	EDCURINS
+405000	School Of Education	Education	SCHOOL_EDUCATION	SS	EDOCCUP
+405000	School Of Education	Education	SCHOOL_EDUCATION	SS	EDSPCHR
+405000	School Of Education	Education	SCHOOL_EDUCATION	SS	EDPHYS
+405000	School Of Education	Education	SCHOOL_EDUCATION	SS	EDPROF
+405000	School Of Education	Education	SCHOOL_EDUCATION	SS	EDSOCPSY
+405000	School Of Education	Education	SCHOOL_EDUCATION	SS	EDGUID
+405000	School Of Education	Education	SCHOOL_EDUCATION	SS	EDSOCIAL
+405000	School Of Education	Education	SCHOOL_EDUCATION	SS	EDCONT
+405000	School Of Education	Education	SCHOOL_EDUCATION	SS	EDHIGHER
+405000	School Of Education	Education	SCHOOL_EDUCATION	SS	EDINDSTD
+410000	Law School	Law	LAW_SCHOOL	P	LAW
+415000	School of Information	Information	SCHOOL_INFORMATION	S	SI
+416000	Air Force Officer Education Pg	Officer Education Programs	VP_GLOBAL_ENGAGED_ED	O	AERO
+417000	Army Officer Education Program	Officer Education Programs	VP_GLOBAL_ENGAGED_ED	O	MILSCI
+418000	Navy Officer Education Program	Officer Education Programs	VP_GLOBAL_ENGAGED_ED	O	NAVSCI
+420000	School of Music, Theatre and Dance	Music, Theatre & Dance	SCHOOL_MUSIC	H	WINDINST
+420000	School of Music, Theatre and Dance	Music, Theatre & Dance	SCHOOL_MUSIC	H	ORGAN
+420000	School of Music, Theatre and Dance	Music, Theatre & Dance	SCHOOL_MUSIC	H	TUBA
+420000	School of Music, Theatre and Dance	Music, Theatre & Dance	SCHOOL_MUSIC	H	FRENHORN
+420000	School of Music, Theatre and Dance	Music, Theatre & Dance	SCHOOL_MUSIC	H	SAX
+420000	School of Music, Theatre and Dance	Music, Theatre & Dance	SCHOOL_MUSIC	H	MUSHON
+420000	School of Music, Theatre and Dance	Music, Theatre & Dance	SCHOOL_MUSIC	H	EARLYMUS
+420000	School of Music, Theatre and Dance	Music, Theatre & Dance	SCHOOL_MUSIC	H	CELLO
+420000	School of Music, Theatre and Dance	Music, Theatre & Dance	SCHOOL_MUSIC	H	BARVIOLA
+420000	School of Music, Theatre and Dance	Music, Theatre & Dance	SCHOOL_MUSIC	H	VIOLA
+420000	School of Music, Theatre and Dance	Music, Theatre & Dance	SCHOOL_MUSIC	H	THEORY
+420000	School of Music, Theatre and Dance	Music, Theatre & Dance	SCHOOL_MUSIC	H	SHAWM
+420000	School of Music, Theatre and Dance	Music, Theatre & Dance	SCHOOL_MUSIC	H	SACKBUT
+420000	School of Music, Theatre and Dance	Music, Theatre & Dance	SCHOOL_MUSIC	H	OBOE
+420000	School of Music, Theatre and Dance	Music, Theatre & Dance	SCHOOL_MUSIC	H	OPERA
+420000	School of Music, Theatre and Dance	Music, Theatre & Dance	SCHOOL_MUSIC	H	TRUM
+420000	School of Music, Theatre and Dance	Music, Theatre & Dance	SCHOOL_MUSIC	H	ENS
+420000	School of Music, Theatre and Dance	Music, Theatre & Dance	SCHOOL_MUSIC	H	PIANOLP
+420000	School of Music, Theatre and Dance	Music, Theatre & Dance	SCHOOL_MUSIC	H	GUITAR
+420000	School of Music, Theatre and Dance	Music, Theatre & Dance	SCHOOL_MUSIC	H	MUSPERF
+420000	School of Music, Theatre and Dance	Music, Theatre & Dance	SCHOOL_MUSIC	H	BARFLUTE
+420000	School of Music, Theatre and Dance	Music, Theatre & Dance	SCHOOL_MUSIC	H	PERCUSS
+420000	School of Music, Theatre and Dance	Music, Theatre & Dance	SCHOOL_MUSIC	H	VOICELIT
+420000	School of Music, Theatre and Dance	Music, Theatre & Dance	SCHOOL_MUSIC	H	CLARINET
+420000	School of Music, Theatre and Dance	Music, Theatre & Dance	SCHOOL_MUSIC	H	BASSOON
+420000	School of Music, Theatre and Dance	Music, Theatre & Dance	SCHOOL_MUSIC	H	VOICE
+420000	School of Music, Theatre and Dance	Music, Theatre & Dance	SCHOOL_MUSIC	H	ARTSADMN
+420000	School of Music, Theatre and Dance	Music, Theatre & Dance	SCHOOL_MUSIC	H	CRLLNLIT
+420000	School of Music, Theatre and Dance	Music, Theatre & Dance	SCHOOL_MUSIC	H	PIANO
+420000	School of Music, Theatre and Dance	Music, Theatre & Dance	SCHOOL_MUSIC	H	EUPHBARI
+420000	School of Music, Theatre and Dance	Music, Theatre & Dance	SCHOOL_MUSIC	H	TROMBONE
+420000	School of Music, Theatre and Dance	Music, Theatre & Dance	SCHOOL_MUSIC	H	VDAGAMBA
+420000	School of Music, Theatre and Dance	Music, Theatre & Dance	SCHOOL_MUSIC	H	FLUTE
+420000	School of Music, Theatre and Dance	Music, Theatre & Dance	SCHOOL_MUSIC	H	BARCELLO
+420000	School of Music, Theatre and Dance	Music, Theatre & Dance	SCHOOL_MUSIC	H	RECORDER
+420000	School of Music, Theatre and Dance	Music, Theatre & Dance	SCHOOL_MUSIC	H	BAROBOE
+420000	School of Music, Theatre and Dance	Music, Theatre & Dance	SCHOOL_MUSIC	H	HARPSCH
+420000	School of Music, Theatre and Dance	Music, Theatre & Dance	SCHOOL_MUSIC	H	BAROQVIO
+420000	School of Music, Theatre and Dance	Music, Theatre & Dance	SCHOOL_MUSIC	H	ORGANLIT
+420000	School of Music, Theatre and Dance	Music, Theatre & Dance	SCHOOL_MUSIC	H	MUSED
+420000	School of Music, Theatre and Dance	Music, Theatre & Dance	SCHOOL_MUSIC	H	CONDUCT
+420000	School of Music, Theatre and Dance	Music, Theatre & Dance	SCHOOL_MUSIC	H	CORNETTO
+420000	School of Music, Theatre and Dance	Music, Theatre & Dance	SCHOOL_MUSIC	H	STRNGLIT
+420000	School of Music, Theatre and Dance	Music, Theatre & Dance	SCHOOL_MUSIC	H	STRINGS
+420000	School of Music, Theatre and Dance	Music, Theatre & Dance	SCHOOL_MUSIC	H	FPIANO
+420000	School of Music, Theatre and Dance	Music, Theatre & Dance	SCHOOL_MUSIC	H	CARILLON
+420000	School of Music, Theatre and Dance	Music, Theatre & Dance	SCHOOL_MUSIC	H	CRUMHORN
+420000	School of Music, Theatre and Dance	Music, Theatre & Dance	SCHOOL_MUSIC	H	VIOLIN
+420000	School of Music, Theatre and Dance	Music, Theatre & Dance	SCHOOL_MUSIC	H	COMPOLIT
+420000	School of Music, Theatre and Dance	Music, Theatre & Dance	SCHOOL_MUSIC	H	EVOCPRAC
+420000	School of Music, Theatre and Dance	Music, Theatre & Dance	SCHOOL_MUSIC	H	COMP
+420000	School of Music, Theatre and Dance	Music, Theatre & Dance	SCHOOL_MUSIC	H	MUSTHTRE
+420000	School of Music, Theatre and Dance	Music, Theatre & Dance	SCHOOL_MUSIC	H	MUSIC
+420000	School of Music, Theatre and Dance	Music, Theatre & Dance	SCHOOL_MUSIC	H	WINDPERC
+420000	School of Music, Theatre and Dance	Music, Theatre & Dance	SCHOOL_MUSIC	H	STDEXCH
+420000	School of Music, Theatre and Dance	Music, Theatre & Dance	SCHOOL_MUSIC	H	MUSICOL
+420000	School of Music, Theatre and Dance	Music, Theatre & Dance	SCHOOL_MUSIC	H	HARP
+420000	School of Music, Theatre and Dance	Music, Theatre & Dance	SCHOOL_MUSIC	H	DBLBASS
+420000	School of Music, Theatre and Dance	Music, Theatre & Dance	SCHOOL_MUSIC	H	JAZZ
+420000	School of Music, Theatre and Dance	Music, Theatre & Dance	SCHOOL_MUSIC	H	CHURCHMU
+420000	School of Music, Theatre and Dance	Music, Theatre & Dance	SCHOOL_MUSIC	H	WKSHOPS
+420000	School of Music, Theatre and Dance	Music, Theatre & Dance	SCHOOL_MUSIC	H	PAT
+431500	Department Of Dance	Music, Theatre & Dance	SCHOOL_MUSIC	H	DANCE
+433000	Theatre And Drama	Music, Theatre & Dance	SCHOOL_MUSIC	H	THTREMUS
+435000	Sch Of Nat Resources & Environ	Literature, Science & the Arts	SCHOOL_NAT_RES_ENVIR	S	NRE
+435000	Sch Of Nat Resources & Environ	Literature, Science & the Arts	SCHOOL_NAT_RES_ENVIR	S	NRPOLEC
+435000	Sch Of Nat Resources & Environ	Literature, Science & the Arts	SCHOOL_NAT_RES_ENVIR	S	NRMGMT
+435000	Sch Of Nat Resources & Environ	Literature, Science & the Arts	SCHOOL_NAT_RES_ENVIR	S	NRRESPL
+435000	Sch Of Nat Resources & Environ	Literature, Science & the Arts	SCHOOL_NAT_RES_ENVIR	S	NRINDI
+435000	Sch Of Nat Resources & Environ	Literature, Science & the Arts	SCHOOL_NAT_RES_ENVIR	S	NRPLANTS
+435000	Sch Of Nat Resources & Environ	Literature, Science & the Arts	SCHOOL_NAT_RES_ENVIR	S	NRBECOM
+435000	Sch Of Nat Resources & Environ	Literature, Science & the Arts	SCHOOL_NAT_RES_ENVIR	S	NRECOL
+435000	Sch Of Nat Resources & Environ	Literature, Science & the Arts	SCHOOL_NAT_RES_ENVIR	S	UTEP
+435000	Sch Of Nat Resources & Environ	Literature, Science & the Arts	SCHOOL_NAT_RES_ENVIR	S	NRANMAQ
+435000	Sch Of Nat Resources & Environ	Literature, Science & the Arts	SCHOOL_NAT_RES_ENVIR	S	NRINTRO
+435000	Sch Of Nat Resources & Environ	Literature, Science & the Arts	SCHOOL_NAT_RES_ENVIR	S	NRLA
+435000	Sch Of Nat Resources & Environ	Literature, Science & the Arts	SCHOOL_NAT_RES_ENVIR	S	NRANLYTC
+440000	School Of Nursing	Nursing	SCHOOL_NURSING	P	NURS
+440000	School Of Nursing	Nursing	SCHOOL_NURSING	P	PNE
+440000	School Of Nursing	Nursing	SCHOOL_NURSING	P	NSC
+440000	School Of Nursing	Nursing	SCHOOL_NURSING	P	HS
+445000	College Of Pharmacy	Pharmacy	COLLEGE_PHARMACY	P	PHARMSCI
+445000	College Of Pharmacy	Pharmacy	COLLEGE_PHARMACY	P	PHARMCEU
+445000	College Of Pharmacy	Pharmacy	COLLEGE_PHARMACY	P	PHARMACY
+445000	College Of Pharmacy	Pharmacy	COLLEGE_PHARMACY	P	SOCADMIN
+445000	College Of Pharmacy	Pharmacy	COLLEGE_PHARMACY	P	PHARMCHM
+445000	College Of Pharmacy	Pharmacy	COLLEGE_PHARMACY	P	PHARMCOG
+445000	College Of Pharmacy	Pharmacy	COLLEGE_PHARMACY	P	MEDCHEM
+445000	College Of Pharmacy	Pharmacy	COLLEGE_PHARMACY	P	HOSPPHAR
+445000	College Of Pharmacy	Pharmacy	COLLEGE_PHARMACY	P	PHARMADM
+450000	School Of Kinesiology	Kinesiology	SCHOOL_KINESIOLOGY	S	KINSTUDY
+450000	School Of Kinesiology	Kinesiology	SCHOOL_KINESIOLOGY	S	HF
+450000	School Of Kinesiology	Kinesiology	SCHOOL_KINESIOLOGY	S	PHYSED
+450000	School Of Kinesiology	Kinesiology	SCHOOL_KINESIOLOGY	S	PHYSEDUC
+450000	School Of Kinesiology	Kinesiology	SCHOOL_KINESIOLOGY	S	AT
+450000	School Of Kinesiology	Kinesiology	SCHOOL_KINESIOLOGY	S	MOVESCI
+450000	School Of Kinesiology	Kinesiology	SCHOOL_KINESIOLOGY	S	SM
+450000	School Of Kinesiology	Kinesiology	SCHOOL_KINESIOLOGY	S	SPTMGMTC
+450000	School Of Kinesiology	Kinesiology	SCHOOL_KINESIOLOGY	S	KINESLGY
+450000-SR	U-Move	Kinesiology	 	O	UMOVE
+455000	School Of Public Health	Public Health	SCHOOL_PUB_HEALTH	SS	CHLFHLT
+455000	School Of Public Health	Public Health	SCHOOL_PUB_HEALTH	SS	HLTGERON
+455000	School Of Public Health	Public Health	SCHOOL_PUB_HEALTH	SS	POPINTH
+455000	School Of Public Health	Public Health	SCHOOL_PUB_HEALTH	SS	TOXICOL
+455000	School Of Public Health	Public Health	SCHOOL_PUB_HEALTH	SS	PHPOLAD
+455000	School Of Public Health	Public Health	SCHOOL_PUB_HEALTH	SS	PUBHLTH
+455000	School Of Public Health	Public Health	SCHOOL_PUB_HEALTH	SS	COMMMNTL
+455000	School Of Public Health	Public Health	SCHOOL_PUB_HEALTH	SS	DENTPH
+455000	School Of Public Health	Public Health	SCHOOL_PUB_HEALTH	SS	HUMNNUTR
+455000	School Of Public Health	Public Health	SCHOOL_PUB_HEALTH	SS	HOSPAD
+455000	School Of Public Health	Public Health	SCHOOL_PUB_HEALTH	SS	MTRNCHLD
+455000	School Of Public Health	Public Health	SCHOOL_PUB_HEALTH	SS	MEDCARE
+455200	Health Management And Policy	Public Health	SCHOOL_PUB_HEALTH	SS	HMP
+455200	Health Management And Policy	Public Health	SCHOOL_PUB_HEALTH	SS	HLTSRVMP
+456000	Biostatistics Department	Public Health	SCHOOL_PUB_HEALTH	S	BIOSTAT
+457500	Environmental Health Sciences	Public Health	SCHOOL_PUB_HEALTH	S	EHS
+457500	Environmental Health Sciences	Public Health	SCHOOL_PUB_HEALTH	S	EIHLTH
+457500	Environmental Health Sciences	Public Health	SCHOOL_PUB_HEALTH	S	NUTR
+458000	Epidemiology Department	Public Health	SCHOOL_PUB_HEALTH	S	EPID
+458300	Health Behavior & Health Education Department	Public Health	SCHOOL_PUB_HEALTH	SS	HBEHED
+464000	School Of Public Policy	Public Policy	SCHOOL_PUB_POLICY	SS	PUBPOL
+465000	School Of Social Work	Social Work	SCHOOL_SOCIAL_WORK	SS	FOS
+465000	School Of Social Work	Social Work	SCHOOL_SOCIAL_WORK	SS	SOCWELF
+465000	School Of Social Work	Social Work	SCHOOL_SOCIAL_WORK	SS	AG
+465000	School Of Social Work	Social Work	SCHOOL_SOCIAL_WORK	SS	HB
+465000	School Of Social Work	Social Work	SCHOOL_SOCIAL_WORK	SS	INTP
+465000	School Of Social Work	Social Work	SCHOOL_SOCIAL_WORK	SS	POLPLAN
+465000	School Of Social Work	Social Work	SCHOOL_SOCIAL_WORK	SS	DOC
+465000	School Of Social Work	Social Work	SCHOOL_SOCIAL_WORK	SS	HLTH
+465000	School Of Social Work	Social Work	SCHOOL_SOCIAL_WORK	SS	EVAL
+465000	School Of Social Work	Social Work	SCHOOL_SOCIAL_WORK	SS	RES
+465000	School Of Social Work	Social Work	SCHOOL_SOCIAL_WORK	SS	COMORG
+465000	School Of Social Work	Social Work	SCHOOL_SOCIAL_WORK	SS	IP
+465000	School Of Social Work	Social Work	SCHOOL_SOCIAL_WORK	SS	SWPS
+465000	School Of Social Work	Social Work	SCHOOL_SOCIAL_WORK	SS	ADMIN
+465000	School Of Social Work	Social Work	SCHOOL_SOCIAL_WORK	SS	CHLDY
+465000	School Of Social Work	Social Work	SCHOOL_SOCIAL_WORK	SS	MHS
+465000	School Of Social Work	Social Work	SCHOOL_SOCIAL_WORK	SS	ADELD
+465000	School Of Social Work	Social Work	SCHOOL_SOCIAL_WORK	SS	SOCWK
+465000	School Of Social Work	Social Work	SCHOOL_SOCIAL_WORK	SS	MHLTH
+465000	School Of Social Work	Social Work	SCHOOL_SOCIAL_WORK	SS	UNDG
+465000	School Of Social Work	Social Work	SCHOOL_SOCIAL_WORK	SS	P&E
+465000	School Of Social Work	Social Work	SCHOOL_SOCIAL_WORK	SS	SW
+465000	School Of Social Work	Social Work	SCHOOL_SOCIAL_WORK	SS	SPEC
+465000	School Of Social Work	Social Work	SCHOOL_SOCIAL_WORK	SS	CSS
+490000	Graduate School	Rackham	RACKHAM_GRAD_SCHOOL	O	CHEMBIO
+490000	Graduate School	Rackham	RACKHAM_GRAD_SCHOOL	O	RACKHAM
+490000	Graduate School	Rackham	RACKHAM_GRAD_SCHOOL	O	MSP
+513200	Museum of Art	Literature, Science & the Arts	VP_ACAD_GRAD_STUDY	H	MUSPRACT
+517500	Registrar's Office	Literature, Science & the Arts	AVP_ENROLL_MGMT	O	DEDK
+517500	Registrar's Office	Literature, Science & the Arts	AVP_ENROLL_MGMT	O	DANTHRO
+517500	Registrar's Office	Literature, Science & the Arts	AVP_ENROLL_MGMT	O	DANTHR
+517500	Registrar's Office	Literature, Science & the Arts	AVP_ENROLL_MGMT	O	DLIBLSTD
+517500	Registrar's Office	Literature, Science & the Arts	AVP_ENROLL_MGMT	O	FMATH
+517500	Registrar's Office	Literature, Science & the Arts	AVP_ENROLL_MGMT	O	DCOMM
+517500	Registrar's Office	Literature, Science & the Arts	AVP_ENROLL_MGMT	O	DSPEECH
+517500	Registrar's Office	Literature, Science & the Arts	AVP_ENROLL_MGMT	O	DHUM
+517500	Registrar's Office	Literature, Science & the Arts	AVP_ENROLL_MGMT	O	DOPERMGT
+517500	Registrar's Office	Literature, Science & the Arts	AVP_ENROLL_MGMT	O	DHISTART
+517500	Registrar's Office	Literature, Science & the Arts	AVP_ENROLL_MGMT	O	DHIST
+517500	Registrar's Office	Literature, Science & the Arts	AVP_ENROLL_MGMT	O	DEDB
+517500	Registrar's Office	Literature, Science & the Arts	AVP_ENROLL_MGMT	O	DPROFED
+517500	Registrar's Office	Literature, Science & the Arts	AVP_ENROLL_MGMT	O	DPSYCH
+517500	Registrar's Office	Literature, Science & the Arts	AVP_ENROLL_MGMT	O	DJOURN
+517500	Registrar's Office	Literature, Science & the Arts	AVP_ENROLL_MGMT	O	DSOCSCI
+517500	Registrar's Office	Literature, Science & the Arts	AVP_ENROLL_MGMT	O	DELCOMP
+517500	Registrar's Office	Literature, Science & the Arts	AVP_ENROLL_MGMT	O	DMUSTHY
+517500	Registrar's Office	Literature, Science & the Arts	AVP_ENROLL_MGMT	O	DSTAT
+517500	Registrar's Office	Literature, Science & the Arts	AVP_ENROLL_MGMT	O	CIC
+517500	Registrar's Office	Literature, Science & the Arts	AVP_ENROLL_MGMT	O	DBUSECON
+517500	Registrar's Office	Literature, Science & the Arts	AVP_ENROLL_MGMT	O	DNATSCI
+517500	Registrar's Office	Literature, Science & the Arts	AVP_ENROLL_MGMT	O	DFORLANG
+517500	Registrar's Office	Literature, Science & the Arts	AVP_ENROLL_MGMT	O	DPOLSCI
+517500	Registrar's Office	Literature, Science & the Arts	AVP_ENROLL_MGMT	O	FPUBADM
+517500	Registrar's Office	Literature, Science & the Arts	AVP_ENROLL_MGMT	O	DACCTG
+517500	Registrar's Office	Literature, Science & the Arts	AVP_ENROLL_MGMT	O	CLASSTD
+517500	Registrar's Office	Literature, Science & the Arts	AVP_ENROLL_MGMT	O	DPUBADM
+517500	Registrar's Office	Literature, Science & the Arts	AVP_ENROLL_MGMT	O	FECON
+517500	Registrar's Office	Literature, Science & the Arts	AVP_ENROLL_MGMT	O	DSOC
+517500	Registrar's Office	Literature, Science & the Arts	AVP_ENROLL_MGMT	O	DEDN
+517500	Registrar's Office	Literature, Science & the Arts	AVP_ENROLL_MGMT	O	DMKTG
+517500	Registrar's Office	Literature, Science & the Arts	AVP_ENROLL_MGMT	O	DEM
+517500	Registrar's Office	Literature, Science & the Arts	AVP_ENROLL_MGMT	O	DENGIN
+517500	Registrar's Office	Literature, Science & the Arts	AVP_ENROLL_MGMT	O	DBUSAD
+517500	Registrar's Office	Literature, Science & the Arts	AVP_ENROLL_MGMT	O	DPHIL
+517500	Registrar's Office	Literature, Science & the Arts	AVP_ENROLL_MGMT	O	DCOMPMAT
+517500	Registrar's Office	Literature, Science & the Arts	AVP_ENROLL_MGMT	O	DPHYSICS
+517500	Registrar's Office	Literature, Science & the Arts	AVP_ENROLL_MGMT	O	DEDA
+517500	Registrar's Office	Literature, Science & the Arts	AVP_ENROLL_MGMT	O	DISE
+517500	Registrar's Office	Literature, Science & the Arts	AVP_ENROLL_MGMT	O	FSOC
+517500	Registrar's Office	Literature, Science & the Arts	AVP_ENROLL_MGMT	O	DEDD
+517500	Registrar's Office	Literature, Science & the Arts	AVP_ENROLL_MGMT	O	FSPEECH
+517500	Registrar's Office	Literature, Science & the Arts	AVP_ENROLL_MGMT	O	FHLTHC
+517500	Registrar's Office	Literature, Science & the Arts	AVP_ENROLL_MGMT	O	DFINANCE
+517500	Registrar's Office	Literature, Science & the Arts	AVP_ENROLL_MGMT	O	DBIOL
+517500	Registrar's Office	Literature, Science & the Arts	AVP_ENROLL_MGMT	O	DMIS
+517500	Registrar's Office	Literature, Science & the Arts	AVP_ENROLL_MGMT	O	DINTRDIS
+517500	Registrar's Office	Literature, Science & the Arts	AVP_ENROLL_MGMT	O	DART
+517500	Registrar's Office	Literature, Science & the Arts	AVP_ENROLL_MGMT	O	DEDC
+517500	Registrar's Office	Literature, Science & the Arts	AVP_ENROLL_MGMT	O	FAMCULT
+517500	Registrar's Office	Literature, Science & the Arts	AVP_ENROLL_MGMT	O	DENVSC
+517500	Registrar's Office	Literature, Science & the Arts	AVP_ENROLL_MGMT	O	DCPTINFO
+517500	Registrar's Office	Literature, Science & the Arts	AVP_ENROLL_MGMT	O	DAUTOENG
+517500	Registrar's Office	Literature, Science & the Arts	AVP_ENROLL_MGMT	O	FBUSAD
+517500	Registrar's Office	Literature, Science & the Arts	AVP_ENROLL_MGMT	O	PGMGMT
+517500	Registrar's Office	Literature, Science & the Arts	AVP_ENROLL_MGMT	O	FANTHR
+517500	Registrar's Office	Literature, Science & the Arts	AVP_ENROLL_MGMT	O	DMATH
+517500	Registrar's Office	Literature, Science & the Arts	AVP_ENROLL_MGMT	O	DEXPL
+517500	Registrar's Office	Literature, Science & the Arts	AVP_ENROLL_MGMT	O	DMGT
+517500	Registrar's Office	Literature, Science & the Arts	AVP_ENROLL_MGMT	O	DMECHENG
+550400	Program Study of Complex Systems	Literature, Science & the Arts	COLLEGE_OF_LSA	S	CMPLXSYS
+554000	Biophysics Research Division	Literature, Science & the Arts	COLLEGE_OF_LSA	S	BIOPHYS
+585154	SRC-PSM Graduate Program	Literature, Science & the Arts	INST_SOC_RESEARCH	O	SURVMETH
