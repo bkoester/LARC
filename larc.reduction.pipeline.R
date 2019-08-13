@@ -40,7 +40,7 @@ larc_table_reduction <- function(TAG='20190529',
   
   jj  <- student_info_term_cols()
   lst <- read_csv(lstname,col_types=jj)
-  lst <- lst %>% filter(CRER_LVL_CD == 'U' & TERM_CD >= 1210)
+  lst <- lst %>% filter(TERM_CD >= 1210) #CRER_LVL_CD == 'U' & 
   
   jj  <- course_term_cols()
   lsc <- read_csv(lscname,col_types=jj)
@@ -54,6 +54,7 @@ larc_table_reduction <- function(TAG='20190529',
   #contains the student career the term a course was taken, as well
   #as a measure of clustering of courses by grade pattern. 
   source(paste(DIR_TO_R,"basic_derived_columns.R",sep=""))
+  source(paste(DIR_TO_R,"larc.cluster.grade.patterns.R",sep=""))
   lst <- as.data.frame(lst)
   lsc <- as.data.frame(lsc)
   lsc <- reduce.lsc.table(lsc,lst) #add student career, standing to course table, course clustering
