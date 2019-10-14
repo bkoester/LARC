@@ -65,8 +65,12 @@ larc_table_reduction <- function(TAG='20190529',
   source(paste(DIR_TO_R,"auxiliary_table_joins.R",sep=""))
   lsi <- add.zipcode.county.geoid(lsi,DATADIR=DIR_TO_DATA)
   lsi <- add.major.division(lsi,DATADIR=DIR_TO_DATA)
-                               
-                               
+          
+  #label the transfer students
+  source(paste(DIR_TO_R,"label_transfer_students.R",sep=""))
+  lsi <- label_transfer_students(lst,lsi)
+  
+                       
   write_tsv(lsc,outSCname)
   write_tsv(lsi,outSRname)
   write_tsv(lst,outSTname)

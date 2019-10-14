@@ -690,3 +690,4 @@ course_term_cols <- function()
   return(tt)
   
 }
+
