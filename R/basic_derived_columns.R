@@ -53,7 +53,7 @@ reduce.lsi.table <- function(lsi)
   
   #too keep all AP/UMPLC add them to the vector list: keep <- c(cols,ap,umplc)
   keep <- cols
-  out  <- lsi[,keep]
+  out  <- lsi#[,keep]
   
   #add in the first gen flag
   e <- out$PRNT_MAX_ED_LVL_CD %in% c(202,203,204,206,205,19,61)
