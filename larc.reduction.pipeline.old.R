@@ -113,7 +113,7 @@ reduce.lsi.table <- function(lsi)
   
   #add a STEM flag to the degrees
   nst  <- dim(lsi)[1]
-  stem <- read.delim("/Users/bkoester/Google Drive/code/REBUILD/LARC.GITHUB/stem_dec2016.txt",header=FALSE,sep="\t")
+  stem <- read.delim("/Users/bkoester/Google Drive/code/REBUILD/LARC.GITHUB/data/stem_dec2016.txt",header=FALSE,sep="\t")
   STEM_DGR_1_MAJOR_1_FLAG <- mat.or.vec(nst,1)
   STEM_DGR_1_MAJOR_2_FLAG <- STEM_DGR_1_MAJOR_1_FLAG 
   STEM_DGR_2_MAJOR_1_FLAG <- STEM_DGR_1_MAJOR_1_FLAG 

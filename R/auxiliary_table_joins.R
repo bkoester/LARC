@@ -66,12 +66,18 @@ add.zipcode.county.geoid <- function(sr,DATADIR=DATADIR)
 {
   
   #sr <- sr[,names(sr) %in% c("PERSON_POSTAL","PERSON_STATE")]
-  CLEAN_ZIP <- clean.zipcodes(sr$FIRST_US_PRMNNT_RES_PSTL_5_CD)
-  sr$CLEAN_ZIP <- CLEAN_ZIP
+  #CLEAN_ZIP <- clean.zipcodes(sr$FIRST_US_PRMNNT_RES_PSTL_5_CD)
+  sr$CLEAN_ZIP <- sr$FIRST_US_PRMNNT_RES_PSTL_5_CD
   zc <- read.csv(paste(DATADIR,"zcta_county_rel_10.txt",sep=""),header=TRUE,sep=",")
   zc <- zc[,names(zc) %in% c("ZCTA5","GEOID")]
   names(zc) <- c('ZCTA5','GEO_ID')
-  CLEAN_ZIP <- clean.zipcodes(zc$ZCTA5)
+  #CLEAN_ZIP <- as.character(clean.zipcodes(zc$ZCTA5))
+  CLEAN_ZIP <- as.character(zc$ZCTA5)
+  e4 <- nchar(CLEAN_ZIP) == 4
+  e3 <- nchar(CLEAN_ZIP) == 3
+  CLEAN_ZIP[e4] <- str_c('0',CLEAN_ZIP)[e4]
+  CLEAN_ZIP[e3] <- str_c('00',CLEAN_ZIP)[e3]
+  
   zc  <- data.frame(zc,CLEAN_ZIP)
   hh <- merge(sr,zc,by='CLEAN_ZIP',all.x=TRUE)
   hh <- hh[!duplicated(hh$STDNT_ID),]

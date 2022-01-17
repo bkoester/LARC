@@ -12,7 +12,7 @@ reduce.lsi.table <- function(lsi)
   #source('/Users/bkoester/Google Drive/code/REBUILD/LARC.GITHUB/larc.fill.act.score.R')
   
   #the basic columns to keep
-  cols <- c("STDNT_ID","STDNT_GNDR_SHORT_DES","STDNT_ETHNC_GRP_SHORT_DES","STDNT_BIRTH_MO","STDNT_BIRTH_YR",
+  cols <- c("STDNT_ID","STDNT_SEX_SHORT_DES","STDNT_ETHNC_GRP_SHORT_DES","STDNT_BIRTH_MO","STDNT_BIRTH_YR",
             "EST_GROSS_FAM_INC_CD","HS_GPA","PRNT_MAX_ED_LVL_CD",
             "MAX_ACT_COMP_SCR","MAX_ACT_ENGL_SCR","MAX_ACT_MATH_SCR",
             "MAX_SATI_TOTAL_CALC_SCR","MAX_SATI_MATH_SCR","MAX_SATI_VERB_SCR",
@@ -73,8 +73,8 @@ reduce.lsc.table <- function(lsc,lst)
   
   print('filling out SC table')
   #tables cuts here
-  e    <- lsc$GRD_BASIS_ENRL_DES == 'Graded'
-  lsc  <- lsc[which(e),]
+  #e    <- lsc$GRD_BASIS_ENRL_DES == 'Graded'
+  #lsc  <- lsc[which(e),]
   
   #fix b-school grades
   lsc$GRD_PNTS_PER_UNIT_NBR[which(lsc$GRD_PNTS_PER_UNIT_NBR == 3.4)] <- 3.3
@@ -83,10 +83,12 @@ reduce.lsc.table <- function(lsc,lst)
   lsc$GRD_PNTS_PER_UNIT_NBR[which(lsc$GRD_PNTS_PER_UNIT_NBR == 4.4 | lsc$GRD_PNTS_PER_UNIT_NBR == 4.3)] <- 4.0
   
   
-  cols <- c("STDNT_ID","TERM_CD","TERM_SHORT_DES","CLASS_NBR","CRSE_GRD_OFFCL_CD",
+  cols <- c("STDNT_ID","TERM_CD","TERM_SHORT_DES","CLASS_NBR","CRSE_GRD_OFFCL_CD","CRSE_GRD_INPUT_CD",
             "UNITS_ERND_NBR","GRD_PNTS_PER_UNIT_NBR","EXCL_CLASS_CUM_GPA",
             "SBJCT_CD","CATLG_NBR","CRSE_ID_CD","CLASS_SCTN_CD","ASSOC_CLASS_CD",
-            "CRSE_CMPNT_CD","CRSE_CIP_CD","CRSE_CIP_DES")
+            "CRSE_CMPNT_CD","CRSE_CIP_CD","CRSE_CIP_DES","CLASS_MTG_START_TM","GRD_BASIS_ENRL_DES","RPT_CD","RPT_SHORT_DES",
+            "CLASS_GPA",
+            "CRSE_GPA")
   data <- lsc[,cols]
   
   #flag the stem courses

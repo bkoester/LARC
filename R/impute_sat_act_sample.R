@@ -5,14 +5,14 @@
 impute_sat_act_sample <- function(sr)
 {
   library(mice)
-  tt <- sr %>% filter(grepl("^U",PRMRY_CRER_CD))
+  tt <- sr #%>% filter(grepl("^U",PRMRY_CRER_CD))
   sr <- sr %>% select("STDNT_ID","FIRST_TERM_ATTND_SHORT_DES",
                       "MEDNUM",
                       "HS_GPA","MAX_ACT_ENGL_SCR","MAX_ACT_MATH_SCR",
                       #"MAX_ACT_SCIRE_SCR","MAX_ACT_READ_SCR",#"MAX_SATI_WR_SCR",
-                      "MAX_SATI_MATH_SCR","MAX_SATI_VERB_SCR",
+                      "MAX_SATI_MATH_SCR","MAX_SATI_VERB_SCR")
                       #"MAX_UMPLC_CH_TEST_SCR","MAX_UMPLC_MATH_TEST_SCR",
-                      "STDNT_CTZN_STAT_CD")
+                      #"STDNT_CTZN_STAT_CD")
                       #"MAX_AP_CALAB_TEST_SCR","MAX_AP_CALBC_TEST_SCR")
                       #"MAX_AP_CH_TEST_SCR")#,#,
                       #"MAX_UMPLC_MATH_TEST_SCR",
@@ -33,41 +33,50 @@ impute_sat_act_sample <- function(sr)
   
   for (i in 1:NTERMS)
   {
+    if (TERMS$FIRST_TERM_ATTND_SHORT_DES[i] != 'FA 2019')
+    {
+      print(TERMS$FIRST_TERM_ATTND_SHORT_DES[i])
+      dd <- which(sr$FIRST_TERM_ATTND_SHORT_DES == TERMS$FIRST_TERM_ATTND_SHORT_DES[i])
+      init <- mice(sr[dd,],maxit=1)
+      meth = init$method
+      predM = init$predictorMatrix
     
-    print(TERMS$FIRST_TERM_ATTND_SHORT_DES[i])
-    dd <- which(sr$FIRST_TERM_ATTND_SHORT_DES == TERMS$FIRST_TERM_ATTND_SHORT_DES[i])
-    init <- mice(sr[dd,],maxit=5)
-    meth = init$method
-    predM = init$predictorMatrix
+      predM[,c("STDNT_ID")]=0
+      predM[,c("FIRST_TERM_ATTND_SHORT_DES")]=0
     
-    predM[,c("STDNT_ID")]=0
-    predM[,c("FIRST_TERM_ATTND_SHORT_DES")]=0
+      meth[c("MAX_ACT_MATH_SCR")]="cart"
+      meth[c("MAX_ACT_ENGL_SCR")]="cart"
+      meth[c("MAX_SATI_MATH_SCR")]="cart"
+      meth[c("MAX_SATI_VERB_SCR")]="cart"
     
-    meth[c("MAX_ACT_MATH_SCR")]="cart"
-    meth[c("MAX_ACT_ENGL_SCR")]="cart"
-    meth[c("MAX_SATI_MATH_SCR")]="cart"
-    meth[c("MAX_SATI_VERB_SCR")]="cart"
-    
-    #meth[c("MAX_ACT_SCIRE_SCR")]=""
-    #meth[c("MAX_ACT_READ_SCR")]=""
-    #meth[c("MAX_SATI_WR_SCR")]=""
-    #meth[c("MAX_AP_CALAB_TEST_SCR")]=""
-    #meth[c("MAX_AP_CALBC_TEST_SCR")]=""
-    #meth[c("MAX_AP_CH_TEST_SCR")]=""
-    #meth[c("MAX_UMPLC_CH_TEST_SCR")]=""
-    #meth[c("MAX_UMPLC_MATH_TEST_SCR")]=""
-    meth[c("STDNT_CTZN_STAT_CD")]=""
-    meth[c("HS_GPA")]=""
-    meth[c("MEDNUM")]=""
-    meth[c("FIRST_TERM_ATTND_SHORT_DES")]=""
-    meth[c("STDNT_ID")]=""
+      #meth[c("MAX_ACT_SCIRE_SCR")]=""
+      #meth[c("MAX_ACT_READ_SCR")]=""
+      #meth[c("MAX_SATI_WR_SCR")]=""
+      #meth[c("MAX_AP_CALAB_TEST_SCR")]=""
+      #meth[c("MAX_AP_CALBC_TEST_SCR")]=""
+      #meth[c("MAX_AP_CH_TEST_SCR")]=""
+      #meth[c("MAX_UMPLC_CH_TEST_SCR")]=""
+      #meth[c("MAX_UMPLC_MATH_TEST_SCR")]=""
+      #meth[c("STDNT_CTZN_STAT_CD")]=""
+      meth[c("HS_GPA")]=""
+      meth[c("MEDNUM")]=""
+      meth[c("FIRST_TERM_ATTND_SHORT_DES")]=""
+      meth[c("STDNT_ID")]=""
   
-    set.seed(103)
-    imputed = mice(sr[dd,], method=meth, predictorMatrix=predM, m=5)
-    imputed <- mice::complete(imputed)
-    sr[dd,] <- imputed
-    #View(imputed)
-    
+      set.seed(103)
+      imputed = mice(sr[dd,], method=meth, predictorMatrix=predM, m=5)
+      imputed <- mice::complete(imputed)
+      print(dim(imputed))
+      print(dim(sr[dd,]))
+      print(imputed %>% filter(is.na(MAX_ACT_MATH_SCR)) %>% tally())
+      print(sr[dd,] %>% filter(is.na(MAX_ACT_MATH_SCR)) %>% tally())
+      
+      sr[dd,] <- imputed
+      
+    } else
+    {
+     print('not imputing FA 2019 or after') 
+    }
   }
   
   #tt$MAX_ACT_COMP_SCR <- sr$MAX_ACT_COMP_SCR

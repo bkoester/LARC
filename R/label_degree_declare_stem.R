@@ -1,80 +1,210 @@
-basic_table_reduction <- function()
+#this takes the LARC student record table as input.
+stem_degree_tracking <- function(TAG,CODEDIR,LARCDIR,OUTDIR)
 {
+  
+  #TAG='20210722'
+  #CODEDIR='/Users/bkoester/Google Drive/code/REBUILD/LARC.GITHUB/'
+  #LARCDIR="/Users/bkoester/Box Sync/LARC.FLAT/"
+  #OUTDIR="/Users/bkoester/Box Sync/LARC.WORKING/"
+  
+  lsiname <- paste(LARCDIR,"LARC_",TAG,"_STDNT_INFO.csv",sep="")
+  lstname <- paste(LARCDIR,"LARC_",TAG,"_STDNT_TERM_INFO.csv",sep="")
+  
+  jj  <- student_info_cols()
+  lsi <- read_csv(lsiname,col_types=jj)
+  jj  <- student_info_term_cols()
+  lst <- read_csv(lstname,col_types=jj)
+  
+  
+  dept_sub <- read_tsv('/Users/bkoester/Box Sync/PublicDataSets/subject_division_2021.txt') 
+  maj <- read_tsv('/Users/bkoester/Box Sync/PublicDataSets/majors_divisions_2021.txt') %>% select(-Rowname)
+  
+  sft <- lsi %>% select(STDNT_ID,FIRST_TERM_ATTND_CD)
+  #either science or engineering will count as STEM
+  dec <- label_stem_declares(lst,maj) %>% left_join(sft)
+  deg <- label_stem_degrees(lsi,maj)  %>% left_join(sft)
+  
+  TERMYR <- compute_termyear(as.integer(dec$FIRST_TERM_ATTND_CD),as.integer(dec$TERM_CD))
+  dec$TERMYR <- TERMYR
+  TERMYR <- compute_termyear(as.integer(deg$FIRST_TERM_ATTND_CD),as.integer(deg$TERM_CD))
+  deg$TERMYR <- TERMYR
+  
+  
+  
+  return(list(dec,deg))
+  
+}  
+
+label_stem_declares <- function(lst,maj)
+{
+  lst <- lst %>% filter(CRER_LVL_CD == 'U')
+  
+  hh1 <- lst %>% group_by(STDNT_ID,PGM_1_MAJOR_1_DES) %>% select(STDNT_ID,TERM_CD,TERM_SHORT_DES,PGM_1_MAJOR_1_DES) %>% 
+        arrange(TERM_CD) %>% filter(row_number() == 1) %>% rename(MAJOR=PGM_1_MAJOR_1_DES)
+  hh1 <- hh1 %>% left_join(maj,by=c('MAJOR'='UM_DGR_1_MAJOR_1_DES')) %>% drop_na()
+  
+  hh2 <- lst %>% group_by(STDNT_ID,PGM_1_MAJOR_2_DES) %>% select(STDNT_ID,TERM_CD,TERM_SHORT_DES,PGM_1_MAJOR_2_DES) %>% 
+        arrange(TERM_CD) %>% filter(row_number() == 1) %>% rename(MAJOR=PGM_1_MAJOR_2_DES)
+  hh2 <- hh2 %>% left_join(maj,by=c('MAJOR'='UM_DGR_1_MAJOR_1_DES')) %>% drop_na()
+  
+  hh3 <- lst %>% group_by(STDNT_ID,PGM_2_MAJOR_1_DES) %>% select(STDNT_ID,TERM_CD,TERM_SHORT_DES,PGM_2_MAJOR_1_DES) %>% 
+        arrange(TERM_CD) %>% filter(row_number() == 1) %>% rename(MAJOR=PGM_2_MAJOR_1_DES)
+  hh3 <- hh3 %>% left_join(maj,by=c('MAJOR'='UM_DGR_1_MAJOR_1_DES')) %>% drop_na()
+  
+  hh4 <- lst %>% group_by(STDNT_ID,PGM_2_MAJOR_2_DES) %>% select(STDNT_ID,TERM_CD,TERM_SHORT_DES,PGM_2_MAJOR_2_DES) %>% 
+        arrange(TERM_CD) %>% filter(row_number() == 1) %>% rename(MAJOR=PGM_2_MAJOR_2_DES)
+  hh4 <- hh4 %>% left_join(maj,by=c('MAJOR'='UM_DGR_1_MAJOR_1_DES')) %>% drop_na()
+  
+  hh5 <- lst %>% group_by(STDNT_ID,PGM_3_MAJOR_1_DES) %>% select(STDNT_ID,TERM_CD,TERM_SHORT_DES,PGM_3_MAJOR_1_DES) %>% 
+        arrange(TERM_CD) %>% filter(row_number() == 1) %>% rename(MAJOR=PGM_3_MAJOR_1_DES)
+  hh5 <- hh5 %>% left_join(maj,by=c('MAJOR'='UM_DGR_1_MAJOR_1_DES')) %>% drop_na()
+  
+  hh6 <- lst %>% group_by(STDNT_ID,PGM_3_MAJOR_2_DES) %>% select(STDNT_ID,TERM_CD,TERM_SHORT_DES,PGM_3_MAJOR_2_DES) %>% 
+        arrange(TERM_CD) %>% filter(row_number() == 1) %>% rename(MAJOR=PGM_3_MAJOR_2_DES)
+  hh6 <- hh6 %>% left_join(maj,by=c('MAJOR'='UM_DGR_1_MAJOR_1_DES')) %>% drop_na()
+  
+  junk <- bind_rows(hh1,hh2,hh3,hh4,hh5,hh6) %>% drop_na(MAJOR)
+  #junk <- hh1
+  
+  return(junk)
+  
+}
+
+
+label_stem_degrees <- function(lsi,maj)
+{
+  
+  hh1 <- lsi %>% filter(UM_DGR_1_ED_LVL_CD == 1) %>% distinct(STDNT_ID,UM_DGR_1_CMPLTN_TERM_CD,UM_DGR_1_MAJOR_1_DES) %>% 
+         rename(TERM_CD=UM_DGR_1_CMPLTN_TERM_CD,MAJOR=UM_DGR_1_MAJOR_1_DES) 
+  hh1 <- hh1 %>% left_join(maj,by=c('MAJOR'='UM_DGR_1_MAJOR_1_DES'))
+  
+  hh2 <- lsi %>% filter(UM_DGR_1_ED_LVL_CD == 1) %>% distinct(STDNT_ID,UM_DGR_1_CMPLTN_TERM_CD,UM_DGR_1_MAJOR_2_DES) %>% 
+         rename(TERM_CD=UM_DGR_1_CMPLTN_TERM_CD,MAJOR=UM_DGR_1_MAJOR_2_DES) 
+  hh2 <- hh2 %>% left_join(maj,by=c('MAJOR'='UM_DGR_1_MAJOR_1_DES'))
+  
+  hh3 <- lsi %>% filter(UM_DGR_2_ED_LVL_CD == 1) %>% distinct(STDNT_ID,UM_DGR_2_CMPLTN_TERM_CD,UM_DGR_2_MAJOR_1_DES) %>% 
+         rename(TERM_CD=UM_DGR_2_CMPLTN_TERM_CD,MAJOR=UM_DGR_2_MAJOR_1_DES) 
+  hh3 <- hh3 %>% left_join(maj,by=c('MAJOR'='UM_DGR_1_MAJOR_1_DES'))
+  
+  hh4 <- lsi %>% filter(UM_DGR_2_ED_LVL_CD == 1) %>% distinct(STDNT_ID,UM_DGR_2_CMPLTN_TERM_CD,UM_DGR_2_MAJOR_2_DES) %>% 
+         rename(TERM_CD=UM_DGR_2_CMPLTN_TERM_CD,MAJOR=UM_DGR_2_MAJOR_2_DES) 
+  hh4 <- hh4 %>% left_join(maj,by=c('MAJOR'='UM_DGR_1_MAJOR_1_DES'))
+  
+  hh5 <- lsi %>% filter(UM_DGR_3_ED_LVL_CD == 1) %>% distinct(STDNT_ID,UM_DGR_3_CMPLTN_TERM_CD,UM_DGR_3_MAJOR_1_DES) %>% 
+         rename(TERM_CD=UM_DGR_3_CMPLTN_TERM_CD,MAJOR=UM_DGR_3_MAJOR_1_DES) 
+  hh5 <- hh5 %>% left_join(maj,by=c('MAJOR'='UM_DGR_1_MAJOR_1_DES'))
+  
+  hh6 <- lsi %>% filter(UM_DGR_3_ED_LVL_CD == 1) %>% distinct(STDNT_ID,UM_DGR_3_CMPLTN_TERM_CD,UM_DGR_3_MAJOR_2_DES) %>% 
+         rename(TERM_CD=UM_DGR_3_CMPLTN_TERM_CD,MAJOR=UM_DGR_3_MAJOR_2_DES) 
+  hh6 <- hh6 %>% left_join(maj,by=c('MAJOR'='UM_DGR_1_MAJOR_1_DES'))
+  
+  junk <- bind_rows(hh1,hh2,hh3,hh4,hh5,hh6) %>% drop_na(MAJOR)
+  
+  return(junk)
+  
+  
+  
+  
   
   
 }
 
-#define the columns to read into memory (and keep) from the 
-#student info table
+compute_termyear <- function(start,stop)
+{
+  delta <- stop-start
+  TERMYR <- mat.or.vec(length(delta),1)
+  
+  #compute the number of years you've been here since your entrance term.
+  # this may not deal well with winter entrance.
+  e0 <- which(delta %% 50 == 0)
+  e1 <- which(delta %% 50 == 10)
+  e2 <- which(delta %% 50 == 20)
+  e3 <- which(delta %% 50 == 30)
+  e4 <- which(delta %% 50 == 40)
+  
+  TERMYR[e0] <- delta[e0]/50+1
+  TERMYR[e1] <- (delta[e1]-10)/50+0.5+1
+  TERMYR[e2] <- (delta[e2]-20)/50+0.6+1
+  TERMYR[e3] <- (delta[e3]-30)/50+0.7+1
+  TERMYR[e4] <- (delta[e4]-40)/50+0.8+1
+  
+  TERMYR <- round(TERMYR*2)
+  
+  return(TERMYR)
+  
+}
+
+
+
 student_info_cols <- function()
 {
   
   tt <- cols_only(
     "STDNT_ID" = col_double(),
-    "STDNT_SEX_CD" = col_double(),
-    "STDNT_SEX_SHORT_DES" = col_character(),
-    "STDNT_BIRTH_YR" = col_double(),
-    "STDNT_BIRTH_MO" = col_double(),
-    "STDNT_ASIAN_IND" = col_double(),
-    "STDNT_BLACK_IND" = col_double(),
-    "STDNT_HWIAN_IND" = col_double(),
-    "STDNT_HSPNC_IND" = col_double(),
-    "STDNT_NTV_AMRCN_IND" = col_double(),
-    "STDNT_WHITE_IND" = col_double(),
-    "STDNT_ETHNC_GRP_CD" = col_double(),
-    "STDNT_ETHNC_GRP_SHORT_DES" = col_character(),
-    "STDNT_MULTI_ETHNC_IND" = col_double(),
-    "STDNT_HSPNC_LATINO_IND" = col_double(),
-    "STDNT_DMSTC_UNDREP_MNRTY_CD" = col_double(),
-    "STDNT_NTV_ENG_SPKR_IND" = col_double(),
-    "FIRST_US_PRMNNT_RES_PSTL_CD" = col_character(),
-    "FIRST_US_PRMNNT_RES_PSTL_5_CD" = col_character(),
-    "FRST_FRGN_PRMNNT_RES_CNTRY_CD" = col_character(),
-    "FRST_FRGN_PRMNNT_RES_CNTRY_DES" = col_character(),
-    "STDNT_CTZN_STAT_CD" = col_character(),
-    "STDNT_CTZN_STAT_SHORT_DES" = col_character(),
-    "STDNT_CTZN_CNTRY_1_CD" = col_character(),
-    "STDNT_CTZN_CNTRY_1_DES" = col_character(),
+    #"STDNT_SEX_CD" = col_double(),
+    #"STDNT_SEX_SHORT_DES" = col_character(),
+    #"STDNT_BIRTH_YR" = col_double(),
+    #"STDNT_BIRTH_MO" = col_double(),
+    #"STDNT_ASIAN_IND" = col_double(),
+    #"STDNT_BLACK_IND" = col_double(),
+    #"STDNT_HWIAN_IND" = col_double(),
+    #"STDNT_HSPNC_IND" = col_double(),
+    #"STDNT_NTV_AMRCN_IND" = col_double(),
+    #"STDNT_WHITE_IND" = col_double(),
+    #"STDNT_ETHNC_GRP_CD" = col_double(),
+    #"STDNT_ETHNC_GRP_SHORT_DES" = col_character(),
+    #"STDNT_MULTI_ETHNC_IND" = col_double(),
+    #"STDNT_HSPNC_LATINO_IND" = col_double(),
+    #"STDNT_DMSTC_UNDREP_MNRTY_CD" = col_double(),
+    #"STDNT_NTV_ENG_SPKR_IND" = col_double(),
+    #"FIRST_US_PRMNNT_RES_PSTL_CD" = col_character(),
+    #"FIRST_US_PRMNNT_RES_PSTL_5_CD" = col_character(),
+    #"FRST_FRGN_PRMNNT_RES_CNTRY_CD" = col_character(),
+    #"FRST_FRGN_PRMNNT_RES_CNTRY_DES" = col_character(),
+    #"STDNT_CTZN_STAT_CD" = col_character(),
+    #"STDNT_CTZN_STAT_SHORT_DES" = col_character(),
+    #"STDNT_CTZN_CNTRY_1_CD" = col_character(),
+    #"STDNT_CTZN_CNTRY_1_DES" = col_character(),
     #STDNT_CTZN_CNTRY_2_CD = col_character(),
     #STDNT_CTZN_CNTRY_2_DES = col_character(),
-    "STDNT_INTL_IND" = col_double(),
+    #"STDNT_INTL_IND" = col_double(),
     "FIRST_TERM_ATTND_CD" = col_character(),
     "FIRST_TERM_ATTND_SHORT_DES" = col_character(),
-    "FIRST_TERM_ATTND_BEGIN_YR_MO" = col_character(),
-    "FIRST_TERM_ATTND_END_YR_MO" = col_character(),
+    #"FIRST_TERM_ATTND_BEGIN_YR_MO" = col_character(),
+    #"FIRST_TERM_ATTND_END_YR_MO" = col_character(),
     "LAST_TERM_ATTND_CD" = col_character(),
     "LAST_TERM_ATTND_SHORT_DES" = col_character(),
-    "LAST_TERM_ATTND_BEGIN_YR_MO" = col_character(),
-    "LAST_TERM_ATTND_END_YR_MO" = col_character(),
-    "ADMSSN_VTRN_IND" = col_double(),
-    "PRNT_MAX_ED_LVL_CD" = col_double(),
-    "PRNT_MAX_ED_LVL_DES" = col_character(),
-    "PRNT_DEP_NBR_CD" = col_double(),
-    "PRNT_DEP_NBR_DES" = col_character(),
-    "EST_GROSS_FAM_INC_CD" = col_double(),
-    "EST_GROSS_FAM_INC_DES" = col_character(),
-    "SNGL_PRNT_IND" = col_double(),
+    #"LAST_TERM_ATTND_BEGIN_YR_MO" = col_character(),
+    #"LAST_TERM_ATTND_END_YR_MO" = col_character(),
+    #"ADMSSN_VTRN_IND" = col_double(),
+    #"PRNT_MAX_ED_LVL_CD" = col_double(),
+    ###"PRNT_MAX_ED_LVL_DES" = col_character(),
+    #"PRNT_DEP_NBR_CD" = col_double(),
+    #"PRNT_DEP_NBR_DES" = col_character(),
+    #"EST_GROSS_FAM_INC_CD" = col_double(),
+    #"EST_GROSS_FAM_INC_DES" = col_character(),
+    #"SNGL_PRNT_IND" = col_double(),
     #HS_CALC_IND = col_double(),
     #HS_CHEM_LAB_IND = col_double(),
-    "HS_GPA" = col_double(),
-    "HS_CEEB_CD" = col_character(),
-    "HS_CITY_NM" = col_character(),
-    "HS_STATE_CD" = col_character(),
-    "HS_PSTL_CD" = col_character(),
+    #"HS_GPA" = col_double(),
+    #"HS_CEEB_CD" = col_character(),
+    #"HS_CITY_NM" = col_character(),
+    #"HS_STATE_CD" = col_character(),
+    #"HS_PSTL_CD" = col_character(),
     #HS_DSCRPTR_PLUS_CLSTR_CD = col_character(),
     #HS_DSCRPTR_PLUS_CLSTR_DES = col_character(),
     #NGHBRHD_DSCRPTR_PLUS_CLSTR_CD = col_character(),
     #NGHBRHD_DSCRPTR_PLUS_CLSTR_DES = col_character(),
     #MAX_ACT_TEST_DT = col_character(),
-    "MAX_ACT_ENGL_SCR" = col_double(),
+    #"MAX_ACT_ENGL_SCR" = col_double(),
     #MAX_ACT_ENGL_PCTL = col_double(),
-    "MAX_ACT_MATH_SCR" = col_double(),
+    #"MAX_ACT_MATH_SCR" = col_double(),
     #MAX_ACT_MATH_PCTL = col_double(),
-    "MAX_ACT_READ_SCR" = col_double(),
+    #"MAX_ACT_READ_SCR" = col_double(),
     #MAX_ACT_READ_PCTL = col_double(),
-    "MAX_ACT_SCIRE_SCR" = col_double(),
+    #"MAX_ACT_SCIRE_SCR" = col_double(),
     #MAX_ACT_SCIRE_PCTL = col_double(),
-    "MAX_ACT_COMP_SCR" = col_double(),
+    #"MAX_ACT_COMP_SCR" = col_double(),
     #MAX_ACT_COMP_PCTL = col_double(),
     #MAX_ACT_EW_SCR = col_double(),
     #MAX_ACT_WR_SUB_SCR = col_double(),
@@ -91,12 +221,12 @@ student_info_cols <- function()
     #MAX_ACT_STEM_SCR = col_double(),
     #MAX_ACT_STEM_PCTL = col_double(),
     #MAX_SATI_TEST_DT = col_character(),
-    "MAX_SATI_MATH_SCR" = col_double(),
+    #"MAX_SATI_MATH_SCR" = col_double(),
     #MAX_SATI_MATH_PCTL = col_double(),
-    "MAX_SATI_VERB_SCR" = col_double(),
+    #"MAX_SATI_VERB_SCR" = col_double(),
     #MAX_SATI_VERB_PCTL = col_double(),
-    "MAX_SATI_TOTAL_CALC_SCR" = col_double(),
-    "MAX_SATI_WR_SCR" = col_double(),
+    #"MAX_SATI_TOTAL_CALC_SCR" = col_double(),
+    #"MAX_SATI_WR_SCR" = col_double(),
     #MAX_SATI_ES_SUB_SCR = col_double(),
     #MAX_SATI_MC_SUB_SCR = col_double(),
     #MAX_SATI_TOTAL_MSS_ERWS_SCR = col_double(),
@@ -172,13 +302,13 @@ student_info_cols <- function()
     #MAX_AP_BY_TEST_DT = col_character(),
     #MAX_AP_BY_TEST_SCR = col_double(),
     #MAX_AP_CALAB_TEST_DT = col_character(),
-    "MAX_AP_CALAB_TEST_SCR" = col_double(),
-    "MAX_AP_CALAB_TEST_SUB_SCR_DT" = col_character(),
-    "MAX_AP_CALAB_TEST_SUB_SCR" = col_double(),
-    "MAX_AP_CALBC_TEST_DT" = col_character(),
-    "MAX_AP_CALBC_TEST_SCR" = col_double(),
-    "MAX_AP_CH_TEST_DT" = col_character(),
-    "MAX_AP_CH_TEST_SCR" = col_double(),
+    #"MAX_AP_CALAB_TEST_SCR" = col_double(),
+    #"MAX_AP_CALAB_TEST_SUB_SCR_DT" = col_character(),
+    #"MAX_AP_CALAB_TEST_SUB_SCR" = col_double(),
+    #"MAX_AP_CALBC_TEST_DT" = col_character(),
+    #"MAX_AP_CALBC_TEST_SCR" = col_double(),
+    #"MAX_AP_CH_TEST_DT" = col_character(),
+    #"MAX_AP_CH_TEST_SCR" = col_double(),
     #MAX_AP_CHINA_TEST_DT = col_character(),
     #MAX_AP_CHINA_TEST_SCR = col_double(),
     #MAX_AP_CPGVT_TEST_DT = col_character(),
@@ -251,10 +381,10 @@ student_info_cols <- function()
     #MAX_UMPLC_ATPT_TEST_SCR = col_double(),
     #MAX_UMPLC_ATPT_RCMD_CD = col_character(),
     #MAX_UMPLC_ATPT_RCMD_DES = col_character(),
-    "MAX_UMPLC_CH_TEST_DT" = col_character(),
-    "MAX_UMPLC_CH_TEST_SCR" = col_double(),
-    "MAX_UMPLC_CH_RCMD_CD" = col_character(),
-    "MAX_UMPLC_CH_RCMD_DES" = col_character(),
+    #"MAX_UMPLC_CH_TEST_DT" = col_character(),
+    #"MAX_UMPLC_CH_TEST_SCR" = col_double(),
+    #"MAX_UMPLC_CH_RCMD_CD" = col_character(),
+    #"MAX_UMPLC_CH_RCMD_DES" = col_character(),
     #MAX_UMPLC_CHN_TEST_DT = col_character(),
     #MAX_UMPLC_CHN_TEST_SCR = col_double(),
     #MAX_UMPLC_CHN_RCMD_CD = col_character(),
@@ -301,9 +431,9 @@ student_info_cols <- function()
     #MAX_UMPLC_LTSCR_RCMD_CD = col_character(),
     #MAX_UMPLC_LTSCR_RCMD_DES = col_character(),
     #MAX_UMPLC_MATH_TEST_DT = col_character(),
-    "MAX_UMPLC_MATH_TEST_SCR" = col_double(),
-    "MAX_UMPLC_MATH_RCMD_CD" = col_character(),
-    "MAX_UMPLC_MATH_RCMD_DES" = col_character(),
+    #"MAX_UMPLC_MATH_TEST_SCR" = col_double(),
+    #"MAX_UMPLC_MATH_RCMD_CD" = col_character(),
+    #"MAX_UMPLC_MATH_RCMD_DES" = col_character(),
     #MAX_UMPLC_PUNJA_TEST_DT = col_character(),
     #MAX_UMPLC_PUNJA_TEST_SCR = col_double(),
     #MAX_UMPLC_PUNJA_RCMD_CD = col_character(),
@@ -338,8 +468,8 @@ student_info_cols <- function()
     #UM_OTHER_DGR_CNT = col_double(),
     "UM_DGR_1_CD" = col_character(),
     "UM_DGR_1_DES" = col_character(),
-    "UM_DGR_1_HONORS_CD" = col_character(),
-    "UM_DGR_1_HONORS_DES" = col_character(),
+    #"UM_DGR_1_HONORS_CD" = col_character(),
+    #"UM_DGR_1_HONORS_DES" = col_character(),
     "UM_DGR_1_ACAD_CRER_CD" = col_character(),
     "UM_DGR_1_ACAD_CRER_DES" = col_character(),
     "UM_DGR_1_ED_LVL_CD" = col_double(),
@@ -440,7 +570,7 @@ student_info_term_cols <- function()
     #RESCO_IND = col_double(),
     #SPPLMNT_STUDY_IND = col_double(),
     #TEACH_CERT_IND = col_double(),
-    "HONORS_PGM_IND" = col_double(),
+    #"HONORS_PGM_IND" = col_double(),
     #ATHLTC_PRTCPT_SPORT_CD = col_double(),
     #ATHLTC_PRTCPT_SPORT_SHORT_DES = col_character(),
     "ACAD_CRER_CNT" = col_double(),
@@ -455,24 +585,24 @@ student_info_term_cols <- function()
     #RES_SHORT_DES = col_character(),
     #ACAD_LOAD_CD = col_character(),
     #ACAD_LOAD_SHORT_DES = col_character(),
-    "ENTRY_TYP_SHORT_DES" = col_character(),
+    #"ENTRY_TYP_SHORT_DES" = col_character(),
     "CRER_LVL_CD" = col_character(),
-    "ACAD_LVL_BOT_CD" = col_double(),
-    "ACAD_LVL_BOT_SHORT_DES" = col_character(),
-    "ACAD_LVL_EOT_CD" = col_double(),
-    "ACAD_LVL_EOT_SHORT_DES" = col_character(),
-    "GRD_PNTS" = col_double(),
-    "UNIT_TAKEN_GPA" = col_double(),
-    "UNIT_TAKEN_NO_GPA" = col_double(),
-    "CURR_GPA" = col_double(),
-    "CUM_GPA" = col_double(),
+    #"ACAD_LVL_BOT_CD" = col_double(),
+    #"ACAD_LVL_BOT_SHORT_DES" = col_character(),
+    #"ACAD_LVL_EOT_CD" = col_double(),
+    #"ACAD_LVL_EOT_SHORT_DES" = col_character(),
+    #"GRD_PNTS" = col_double(),
+    #"UNIT_TAKEN_GPA" = col_double(),
+    #"UNIT_TAKEN_NO_GPA" = col_double(),
+    #"CURR_GPA" = col_double(),
+    #"CUM_GPA" = col_double(),
     #PREV_TERM_CUM_GPA = col_double(),
     "PGM_1_CD" = col_character(),
     "PGM_1_DES" = col_character(),
     "PGM_1_MAJOR_1_CD" = col_character(),
     "PGM_1_MAJOR_1_DES" = col_character(),
-    "PGM_1_MAJOR_1_CIP_CD" = col_character(),
-    "PGM_1_MAJOR_1_CIP_DES" = col_character(),
+    #"PGM_1_MAJOR_1_CIP_CD" = col_character(),
+    #"PGM_1_MAJOR_1_CIP_DES" = col_character(),
     "PGM_1_MAJOR_1_DCLR_DT" = col_character(),
     #PGM_1_MAJOR_1_SUBPLN_1_CD = col_character(),
     #PGM_1_MAJOR_1_SUBPLN_1_DES = col_character(),
@@ -513,8 +643,8 @@ student_info_term_cols <- function()
     "PGM_2_DES" = col_character(),
     "PGM_2_MAJOR_1_CD" = col_character(),
     "PGM_2_MAJOR_1_DES" = col_character(),
-    "PGM_2_MAJOR_1_CIP_CD" = col_character(),
-    "PGM_2_MAJOR_1_CIP_DES" = col_character(),
+    #"PGM_2_MAJOR_1_CIP_CD" = col_character(),
+    #"PGM_2_MAJOR_1_CIP_DES" = col_character(),
     "PGM_2_MAJOR_1_DCLR_DT" = col_character(),
     #PGM_2_MAJOR_1_SUBPLN_1_CD = col_character(),
     #PGM_2_MAJOR_1_SUBPLN_1_DES = col_character(),
@@ -528,8 +658,8 @@ student_info_term_cols <- function()
     #PGM_2_MAJOR_1_SUBPLN_2_DCLR_DT = col_character(),
     "PGM_2_MAJOR_2_CD" = col_character(),
     "PGM_2_MAJOR_2_DES" = col_character(),
-    "PGM_2_MAJOR_2_CIP_CD" = col_character(),
-    "PGM_2_MAJOR_2_CIP_DES" = col_character(),
+    #"PGM_2_MAJOR_2_CIP_CD" = col_character(),
+    #"PGM_2_MAJOR_2_CIP_DES" = col_character(),
     "PGM_2_MAJOR_2_DCLR_DT" = col_character(),
     #PGM_2_MAJOR_2_SUBPLN_1_CD = col_character(),
     #PGM_2_MAJOR_2_SUBPLN_1_DES = col_character(),
@@ -555,8 +685,8 @@ student_info_term_cols <- function()
     "PGM_3_DES" = col_character(),
     "PGM_3_MAJOR_1_CD" = col_character(),
     "PGM_3_MAJOR_1_DES" = col_character(),
-    "PGM_3_MAJOR_1_CIP_CD" = col_character(),
-    "PGM_3_MAJOR_1_CIP_DES" = col_character(),
+    #"PGM_3_MAJOR_1_CIP_CD" = col_character(),
+    #"PGM_3_MAJOR_1_CIP_DES" = col_character(),
     "PGM_3_MAJOR_1_DCLR_DT" = col_character(),
     #PGM_3_MAJOR_1_SUBPLN_1_CD = col_character(),
     #PGM_3_MAJOR_1_SUBPLN_1_DES = col_character(),
@@ -570,8 +700,8 @@ student_info_term_cols <- function()
     #PGM_3_MAJOR_1_SUBPLN_2_DCLR_DT = col_character(),
     "PGM_3_MAJOR_2_CD" = col_character(),
     "PGM_3_MAJOR_2_DES" = col_character(),
-    "PGM_3_MAJOR_2_CIP_CD" = col_character(),
-    "PGM_3_MAJOR_2_CIP_DES" = col_character(),
+    #"PGM_3_MAJOR_2_CIP_CD" = col_character(),
+    #"PGM_3_MAJOR_2_CIP_DES" = col_character(),
     "PGM_3_MAJOR_2_DCLR_DT" = col_character()
     #PGM_3_MAJOR_2_SUBPLN_1_CD = col_character(),
     #PGM_3_MAJOR_2_SUBPLN_1_DES = col_character(),
@@ -594,99 +724,6 @@ student_info_term_cols <- function()
     #PGM_3_MINOR_2_CIP_DES = col_character(),
     #PGM_3_MINOR_2_DCLR_DT = col_character())
   )
-  return(tt)
-  
-}
-
-#define the columns to read into memory (and keep) from the 
-#student course table
-course_term_cols <- function()
-{
-  tt <- 
-    cols_only(
-      "STDNT_ID" = col_double(),
-      "TERM_CD" = col_character(),
-      "CLASS_NBR" = col_double(),
-      "TERM_SHORT_DES" = col_character(),
-      "GRD_BASIS_ENRL_CD" = col_character(),
-      "GRD_BASIS_ENRL_DES" = col_character(),
-      "CRSE_GRD_INPUT_CD" = col_character(),
-      "CRSE_GRD_OFFCL_CD" = col_character(),
-      "UNITS_TAKEN_NBR" = col_double(),
-      "UNITS_ERND_NBR" = col_double(),
-      "EARN_CR_IND" = col_double(),
-      "INCL_GPA_IND" = col_double(),
-      "GRD_PNTS_PER_UNIT_NBR" = col_double(),
-      "EXCL_CLASS_CURR_GPA" = col_double(),
-      "EXCL_CLASS_CUM_GPA" = col_double(),
-      "RPT_CD" = col_character(),
-      "RPT_SHORT_DES" = col_character(),
-      "SBJCT_CD" = col_character(),
-      "SBJCT_DES" = col_character(),
-      "CATLG_NBR" = col_character(),
-      "CRSE_ID_CD" = col_character(),
-      "CRSE_OFFER_NBR" = col_double(),
-      #"SESSN_CD" = col_character(),
-      #"SESSN_SHORT_DES" = col_character(),
-      "CLASS_SCTN_CD" = col_character(),
-      "ASSOC_CLASS_CD" = col_double(),
-      "CRSE_CMPNT_CD" = col_character(),
-      "CRSE_CMPNT_SHORT_DES" = col_character(),
-      "CLASS_HOME_IND_CD" = col_character(),
-      #CMBN_SCTN_MEET_TGTHR_IND = col_double(),
-      #CMBN_SCTN_CROSS_LSTD_IND = col_double(),
-      #CMBN_SCTN_UG_GRAD_IND = col_double(),
-      #CMBN_SCTN_ID_CD = col_character(),
-      #CLASS_LONG_DES = col_character(),
-      #CLASS_GRDD_IND = col_double(),
-      #CLASS_HONORS_IND = col_double(),
-      #CLASS_ENRL_TOTAL_NBR = col_double(),
-      #CMBN_CLASS_ENRL_TOTAL_NBR = col_double(),
-      #INSTRN_MODE_CD = col_character(),
-      #INSTRN_MODE_SHORT_DES = col_character(),
-      "CRSE_CIP_CD" = col_character(),
-      "CRSE_CIP_DES" = col_character(),
-      #FCLTY_ID_CD = col_character(),
-      #FCLTY_DES = col_character(),
-      #FCLTY_SOUND_PGM_IND = col_double(),
-      #FCLTY_SOUND_VOICE_IND = col_double(),
-      #FCLTY_BLACK_OUT_IND = col_double(),
-      #FCLTY_PC_IND = col_double(),
-      #FCLTY_MAC_IND = col_double(),
-      #FCLTY_PDM_PC_IND = col_double(),
-      #FCLTY_PDM_MAC_IND = col_double(),
-      #FCLTY_WHITE_BOARD_25_FT_IND = col_double(),
-      #FCLTY_CHALK_BOARD_25_FT_IND = col_double(),
-      #FCLTY_VCR_IND = col_double(),
-      #FCLTY_DVD_IND = col_double(),
-      #FCLTY_VIDEO_CNFRNC_IND = col_double(),
-      #FCLTY_LCTR_CPTR_IND = col_double(),
-      #FCLTY_DOC_CAMERA_IND = col_double(),
-      #FCLTY_16MM_FILM_IND = col_double(),
-      #FCLTY_35MM_FILM_IND = col_double(),
-      #FCLTY_DGTL_DATA_AND_VIDEO_IND = col_double(),
-      #FCLTY_TIERED_FLR_IND = col_double(),
-      #FCLTY_STAGE_IND = col_double(),
-      #FCLTY_ADTRM_SEAT_IND = col_double(),
-      #FCLTY_ANY_TBLS_IND = col_double(),
-      #FCLTY_MVBL_TBLS_IND = col_double(),
-      #FCLTY_MVBL_TBLS_CHAIR_IND = col_double(),
-      #FCLTY_TBL_CNFRNC_SMNR_IND = col_double(),
-      #MULT_CLASS_MTG_IND = col_double(),
-      #CLASS_MTG_START_DT = col_character(),
-      #CLASS_MTG_END_DT = col_character(),
-      "CLASS_MTG_START_TM" = col_character(),
-      "CLASS_MTG_END_TM" = col_character(),
-      "CLASS_MTG_MON_IND" = col_double(),
-      "CLASS_MTG_TUES_IND" = col_double(),
-      "CLASS_MTG_WED_IND" = col_double(),
-      "CLASS_MTG_THURS_IND" = col_double(),
-      "CLASS_MTG_FRI_IND" = col_double(),
-      "CLASS_MTG_SAT_IND" = col_double(),
-      "CLASS_MTG_SUN_IND" = col_double(),
-      #CLASS_SCTN_TOPIC_DES = col_character(),
-      "CLASS_GPA" = col_double(),
-      "CRSE_GPA" = col_double())
   return(tt)
   
 }

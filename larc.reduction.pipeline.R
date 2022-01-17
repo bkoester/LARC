@@ -11,14 +11,14 @@
 #EXAMPLE: > larc.reduction.pipeline(lsi,lst,lsc)
 #####################################################################################
 
-larc_table_reduction <- function(TAG='20190529',
+larc_table_reduction <- function(TAG='20210921',
                                  CODEDIR='/Users/bkoester/Google Drive/code/REBUILD/LARC.GITHUB/',
                                  LARCDIR="/Users/bkoester/Box Sync/LARC.FLAT/",
                                  OUTDIR="/Users/bkoester/Box Sync/LARC.WORKING/")
 {
   
   library(tidyverse)
-  library(zipcode)
+  #library(zipcode)
   
   DIR_TO_R    <- str_c(CODEDIR,'R/',sep="")
   DIR_TO_DATA <- str_c(CODEDIR,'data/',sep="")
@@ -30,6 +30,9 @@ larc_table_reduction <- function(TAG='20190529',
   outSCname <- paste(OUTDIR,'BPK_LARC_STUDENT_COURSE_',TAG,'.tab',sep="")
   outSRname <- paste(OUTDIR,'BPK_LARC_STUDENT_RECORD_',TAG,'.tab',sep="")
   outSTname <- paste(OUTDIR,'BPK_LARC_STUDENT_TERM_',TAG,'.tab',sep="")
+  
+  outSDECLONGname <- paste(OUTDIR,'BPK_LARC_STUDENT_LONG_DECLARES_',TAG,'.tab',sep="")
+  outSDEGLONGname <- paste(OUTDIR,'BPK_LARC_STUDENT_LONG_DEGREES_',TAG,'.tab',sep="")
   
   #outSCnameTEMP <- paste(OUTDIR,'TEMP_BPK_LARC_STUDENT_COURSE_',TAG,'.tab',sep="")
   #outSRnameTEMP  <- paste(OUTDIR,'TEMP_BPK_LARC_STUDENT_RECORD_',TAG,'.tab',sep="")
@@ -44,7 +47,7 @@ larc_table_reduction <- function(TAG='20190529',
   
   jj  <- course_term_cols()
   lsc <- read_csv(lscname,col_types=jj)
-  lsc <- lsc %>% filter(GRD_BASIS_ENRL_DES == 'Graded' & TERM_CD >= 1210)
+  lsc <- lsc %>% filter(TERM_CD >= 1210)# & GRD_BASIS_ENRL_DES == 'Graded' & )
   
   jj  <- student_info_cols()
   lsi <- read_csv(lsiname,col_types=jj)
@@ -70,10 +73,19 @@ larc_table_reduction <- function(TAG='20190529',
   source(paste(DIR_TO_R,"label_transfer_students.R",sep=""))
   lsi <- label_transfer_students(lst,lsi)
   
+  #impute most of the missing ACT/SAT scores
+  source(paste(DIR_TO_R,"impute_sat_act_sample.R",sep=""))
+  lsi <- impute_sat_act_sample(lsi)
                        
   write_tsv(lsc,outSCname)
   write_tsv(lsi,outSRname)
   write_tsv(lst,outSTname)
+  
+  #write out the long degree and long declare tables
+  source(paste(DIR_TO_R,"label_degree_declare_stem.R",sep=""))
+  jj <- stem_degree_tracking(TAG,CODEDIR,LARCDIR,OUTDIR)
+  write_tsv(jj[[1]],outSDECLONGname)
+  write_tsv(jj[[2]],outSDEGLONGname)
   
   return()
 }
